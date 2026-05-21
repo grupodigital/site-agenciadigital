@@ -8,6 +8,13 @@ export const contentType = "image/png";
 const PRIMARY = "#143c68";
 const SECONDARY = "#f5a201";
 
+type Font = {
+  name: string;
+  data: ArrayBuffer;
+  weight: 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900;
+  style: "normal" | "italic";
+};
+
 // Satori (engine behind ImageResponse) doesn't support variable TTF files.
 // We load a static weight of Outfit from Google Fonts CDN at request time.
 async function loadGoogleFont(family: string, weight: number) {
@@ -33,11 +40,9 @@ export default async function OpengraphImage() {
   ]);
 
   const fonts = [
-    regular && { name: "Outfit", data: regular, style: "normal" as const, weight: 400 as const },
-    bold && { name: "Outfit", data: bold, style: "normal" as const, weight: 700 as const },
-  ].filter(Boolean) as NonNullable<
-    Parameters<typeof ImageResponse>[1] extends { fonts?: infer F } ? F : never
-  >;
+    regular && { name: "Outfit", data: regular, style: "normal", weight: 400 },
+    bold && { name: "Outfit", data: bold, style: "normal", weight: 700 },
+  ].filter(Boolean) as Font[];
 
   return new ImageResponse(
     (
