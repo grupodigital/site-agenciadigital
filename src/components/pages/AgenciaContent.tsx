@@ -17,13 +17,14 @@ export default function AgenciaContent() {
         {/* ============================== HERO (imagem) ============================== */}
         <section
           data-hero
-          className="relative aspect-video w-full overflow-hidden bg-black"
+          className="relative aspect-video w-full overflow-hidden bg-primary"
         >
           <Image
             src="/foto-bner.jpg"
             alt=""
             fill
-            priority
+            preload
+            fetchPriority="high"
             sizes="100vw"
             className="object-cover"
           />
@@ -41,7 +42,7 @@ export default function AgenciaContent() {
           {/* Soft full-coverage tint — unifies tone with the video aesthetic */}
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-0 bg-black/30"
+            className="pointer-events-none absolute inset-0 bg-black/15"
           />
 
           {/* Hero copy — anchored to bottom-left like a cinematic title card */}
@@ -100,10 +101,10 @@ export default function AgenciaContent() {
         {/* ============================== SOBRE / 22 ANOS ============================== */}
         <section
           id="sobre"
-          className="relative z-10 overflow-hidden bg-zinc-900 px-4 py-32 sm:px-6 md:py-40"
+          className="relative z-10 overflow-hidden bg-primary px-4 py-32 sm:px-6 md:py-40"
         >
           <ParallaxBg src="/about-bg232.jpeg" />
-          <div aria-hidden="true" className="absolute inset-0 bg-black/70" />
+          <div aria-hidden="true" className="absolute inset-0 bg-primary/65" />
 
           <motion.span
             aria-hidden="true"
@@ -188,7 +189,7 @@ export default function AgenciaContent() {
                     ease: EASE_OUT,
                     delay: 0.2 + i * 0.1,
                   }}
-                  className="bg-zinc-900/60 px-6 py-10 backdrop-blur-sm md:px-10 md:py-12"
+                  className="bg-primary/40 px-6 py-10 backdrop-blur-sm md:px-10 md:py-12"
                 >
                   <p className="text-5xl font-medium leading-none tracking-tight text-secondary md:text-6xl">
                     {kpi.value}
@@ -378,7 +379,7 @@ export default function AgenciaContent() {
         {/* ============================== PRÊMIOS ============================== */}
         <section
           id="premios"
-          className="relative z-10 overflow-hidden bg-zinc-900 px-4 py-32 text-white sm:px-6 md:py-40"
+          className="relative z-10 overflow-hidden bg-primary px-4 py-32 text-white sm:px-6 md:py-40"
         >
           <motion.span
             aria-hidden="true"
@@ -449,7 +450,7 @@ export default function AgenciaContent() {
                     ease: EASE_OUT,
                     delay: 0.1 + i * 0.06,
                   }}
-                  className="bg-zinc-900 px-5 py-8 md:px-6 md:py-10"
+                  className="bg-primary px-5 py-8 md:px-6 md:py-10"
                 >
                   <p className="text-3xl font-medium leading-none tracking-tight text-secondary md:text-4xl">
                     {premio.ano}

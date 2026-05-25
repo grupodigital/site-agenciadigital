@@ -60,13 +60,14 @@ export default function TrabalhosContent() {
         {/* ============================== HERO (imagem) ============================== */}
         <section
           data-hero
-          className="relative aspect-video w-full overflow-hidden bg-black"
+          className="relative aspect-video w-full overflow-hidden bg-primary"
         >
           <Image
             src="/bg-footer.jpeg"
             alt=""
             fill
-            priority
+            preload
+            fetchPriority="high"
             sizes="100vw"
             className="object-cover"
           />
@@ -81,7 +82,7 @@ export default function TrabalhosContent() {
           />
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-0 bg-black/35"
+            className="pointer-events-none absolute inset-0 bg-black/20"
           />
 
           <div className="absolute inset-0 z-[2] flex items-end">
@@ -221,6 +222,8 @@ export default function TrabalhosContent() {
                             alt=""
                             width={400}
                             height={200}
+                            sizes="(max-width: 768px) 50vw, 30vw"
+                            quality={75}
                             className={`h-auto w-full max-w-[60%] opacity-25 transition duration-700 group-hover:scale-105 group-hover:opacity-40 ${
                               projeto.invertLogo ? 'invert brightness-0' : ''
                             }`}
@@ -330,7 +333,7 @@ export default function TrabalhosContent() {
         {/* ============================== CTA ============================== */}
         <section
           id="cta"
-          className="relative z-10 overflow-hidden bg-zinc-900 px-4 py-32 text-white sm:px-6 md:py-40"
+          className="relative z-10 overflow-hidden bg-primary px-4 py-32 text-white sm:px-6 md:py-40"
         >
           <motion.span
             aria-hidden="true"
@@ -451,7 +454,7 @@ export default function TrabalhosContent() {
               </button>
 
               {/* Video frame */}
-              <div className="relative aspect-video w-full overflow-hidden bg-black shadow-2xl">
+              <div className="relative aspect-video w-full overflow-hidden bg-primary shadow-2xl">
                 <iframe
                   key={openProjeto.titulo}
                   src={`${openProjeto.videoUrl}?autoplay=1&dnt=1`}

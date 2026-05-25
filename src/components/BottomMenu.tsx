@@ -58,7 +58,7 @@ const SOCIAL_LINKS = [
 const EASE = [0.16, 1, 0.3, 1] as const;
 
 const GLASS_CLASSES =
-  'bg-black/70 backdrop-blur-xl backdrop-saturate-150';
+  'bg-primary/65 backdrop-blur-xl backdrop-saturate-150';
 
 function isActiveLink(href: string, pathname: string) {
   return href === '/' ? pathname === '/' : pathname.startsWith(href);
@@ -144,7 +144,7 @@ export default function BottomMenu() {
             transition={{ duration: 0.4, ease: EASE }}
             onClick={() => setOpen(false)}
             aria-hidden="true"
-            className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm"
+            className="fixed inset-0 z-[60] bg-black/30 backdrop-blur-sm"
           />
         )}
       </AnimatePresence>

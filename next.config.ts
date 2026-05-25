@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  images: {
+    minimumCacheTTL: 2_678_400,
+  },
 };
 
 export default nextConfig;

@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'motion/react';
 import { useEffect, useState } from 'react';
@@ -31,8 +32,8 @@ export default function Header() {
           <motion.div
             animate={{
               backgroundColor: scrolled
-                ? 'rgba(0, 0, 0, 0.92)'
-                : 'rgba(0, 0, 0, 0)',
+                ? 'rgba(20, 60, 104, 0.92)'
+                : 'rgba(20, 60, 104, 0)',
               padding: scrolled ? 12 : 0,
             }}
             transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
@@ -43,12 +44,14 @@ export default function Header() {
               aria-label="Digital Comunicação"
               className="relative block h-7 w-[99px] md:h-9 md:w-[127px]"
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src="/logo-ad.svg"
                 alt=""
                 aria-hidden="true"
-                className="absolute inset-0 h-full w-full"
+                fill
+                sizes="127px"
+                preload
+                className="object-contain"
               />
             </Link>
           </motion.div>

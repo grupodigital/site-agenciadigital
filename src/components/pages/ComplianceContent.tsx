@@ -97,7 +97,7 @@ export default function ComplianceContent() {
         {/* ============================== HERO ============================== */}
         <section
           data-hero
-          className="relative z-10 bg-zinc-900 px-4 pb-24 pt-36 sm:px-6 md:pb-32 md:pt-44"
+          className="relative z-10 bg-primary px-4 pb-24 pt-36 sm:px-6 md:pb-32 md:pt-44"
         >
           {/* Top gradient — Header readability */}
           <div
@@ -200,7 +200,7 @@ export default function ComplianceContent() {
                     ease: EASE_OUT,
                     delay: 0.15 + i * 0.1,
                   }}
-                  className="group relative flex flex-col bg-white p-8 transition-colors duration-300 hover:bg-zinc-900 md:p-10"
+                  className="group relative flex flex-col bg-white p-8 transition-colors duration-300 hover:bg-primary md:p-10"
                 >
                   <span
                     aria-hidden="true"
@@ -422,7 +422,7 @@ function DenunciaForm() {
         role="status"
         className="border border-zinc-200 bg-white shadow-sm"
       >
-        <div className="flex items-center gap-3 border-b border-zinc-200 bg-zinc-900 px-6 py-5 md:px-10 md:py-6">
+        <div className="flex items-center gap-3 border-b border-zinc-200 bg-primary px-6 py-5 md:px-10 md:py-6">
           <span
             aria-hidden="true"
             className="inline-block h-1.5 w-1.5 rounded-full bg-secondary"
@@ -580,7 +580,7 @@ function DenunciaForm() {
         <button
           type="submit"
           disabled={pending}
-          className="inline-flex items-center gap-3 bg-primary px-7 py-3 text-sm font-semibold text-white transition-colors duration-300 hover:bg-zinc-900 disabled:cursor-not-allowed disabled:opacity-60"
+          className="inline-flex items-center gap-3 bg-primary px-7 py-3 text-sm font-semibold text-white transition-colors duration-300 hover:bg-primary/85 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {pending ? 'Enviando…' : 'Enviar manifestação'}
           <svg

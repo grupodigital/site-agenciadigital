@@ -13,7 +13,7 @@ export default function Hero() {
   return (
     <div
       data-hero
-      className="relative aspect-video w-full bg-black"
+      className="relative aspect-video w-full bg-primary"
     >
       {/* Scroll hint anchored to the bottom of the visual hero. Lives in the
           in-flow spacer so it scrolls away naturally with the page. */}

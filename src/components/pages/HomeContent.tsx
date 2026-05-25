@@ -20,10 +20,10 @@ export default function HomeContent() {
         {/* ============================== SOBRE ============================== */}
         <section
           id="sobre"
-          className="relative z-10 overflow-hidden bg-zinc-900 px-4 py-32 sm:px-6 md:py-40"
+          className="relative z-10 overflow-hidden bg-primary px-4 py-32 sm:px-6 md:py-40"
         >
           <ParallaxBg src="/about-bg232.jpeg" />
-          <div aria-hidden="true" className="absolute inset-0 bg-black/70" />
+          <div aria-hidden="true" className="absolute inset-0 bg-primary/65" />
 
           {/* Brand-stamp number — anchors the section visually and reinforces "22 anos" */}
           <motion.span
@@ -184,6 +184,8 @@ export default function HomeContent() {
                     alt={i < CLIENTES.length ? cliente.nome : ""}
                     width={300}
                     height={160}
+                    sizes="(max-width: 640px) 30vw, 200px"
+                    quality={65}
                     className="h-auto w-full opacity-55 grayscale transition duration-500 hover:opacity-100 hover:grayscale-0"
                   />
                 </div>
@@ -215,6 +217,8 @@ export default function HomeContent() {
                   alt={selo.nome}
                   width={240}
                   height={120}
+                  sizes="128px"
+                  quality={65}
                   className="h-auto w-full opacity-55 grayscale transition duration-500 hover:opacity-100 hover:grayscale-0"
                 />
               </div>

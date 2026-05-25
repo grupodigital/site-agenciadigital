@@ -1,19 +1,21 @@
 'use client';
 
 import { AnimatePresence, motion } from 'motion/react';
+import dynamic from 'next/dynamic';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, type ComponentType } from 'react';
-import HomeContent from './pages/HomeContent';
-import AgenciaContent from './pages/AgenciaContent';
-import TrabalhosContent from './pages/TrabalhosContent';
-import ComplianceContent from './pages/ComplianceContent';
 import { OverlayProvider, useTransition } from './TransitionContext';
 
+// Overlay versions of the route pages are lazy-loaded. The route itself
+// already ships its own copy via the app router; here we only need the
+// component when the user actually triggers a transition. Webpack dedupes
+// the chunks with the route bundles where possible, so prefetched routes
+// load instantly when their overlay is needed.
 const PAGE_COMPONENTS: Record<string, ComponentType> = {
-  '/': HomeContent,
-  '/agencia': AgenciaContent,
-  '/trabalhos': TrabalhosContent,
-  '/compliance': ComplianceContent,
+  '/': dynamic(() => import('./pages/HomeContent'), { ssr: false }),
+  '/agencia': dynamic(() => import('./pages/AgenciaContent'), { ssr: false }),
+  '/trabalhos': dynamic(() => import('./pages/TrabalhosContent'), { ssr: false }),
+  '/compliance': dynamic(() => import('./pages/ComplianceContent'), { ssr: false }),
 };
 
 export default function PageTransition({

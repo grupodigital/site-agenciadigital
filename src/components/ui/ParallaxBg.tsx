@@ -1,10 +1,11 @@
 'use client';
 
+import Image from 'next/image';
 import { motion, useScroll, useTransform } from 'motion/react';
 import { useRef } from 'react';
 
 type Props = {
-  /** Background image URL. */
+  /** Background image URL (served via next/image for AVIF/WebP + srcset). */
   src: string;
   /** Maximum pixel offset per direction (up/down). Default 80. */
   offset?: number;
@@ -33,14 +34,18 @@ export default function ParallaxBg({ src, offset = 80 }: Props) {
       className="pointer-events-none absolute inset-0 overflow-hidden"
     >
       <motion.div
-        style={{
-          y,
-          backgroundImage: `url(${src})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
+        style={{ y }}
         className="absolute inset-x-0 -inset-y-[100px]"
-      />
+      >
+        <Image
+          src={src}
+          alt=""
+          fill
+          sizes="100vw"
+          quality={65}
+          className="object-cover"
+        />
+      </motion.div>
     </div>
   );
 }

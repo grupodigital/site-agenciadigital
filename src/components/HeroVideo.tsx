@@ -39,6 +39,13 @@ export default function HeroVideo() {
     phase = 'hidden';
   }
 
+  // Only mount the iframe when the video is — or is about to be — visible.
+  // On non-home initial loads we don't pay the cost of loading the Vimeo
+  // player at all. On click-back-to-home, the iframe mounts together with
+  // the rising animation. We lose the "never reload" guarantee in that one
+  // case but save megabytes on every internal-route first paint.
+  const shouldMountIframe = phase !== 'hidden';
+
   // Keyframe arrays force motion to actually animate THROUGH the values
   // (vs trying to be clever about "no change needed"). The rising phase
   // mirrors PageTransition's overlay exactly: y first, scale with a delay.
@@ -57,7 +64,7 @@ export default function HeroVideo() {
   return (
     <motion.div
       aria-hidden={phase === 'hidden'}
-      className="pointer-events-none fixed inset-x-0 top-0 aspect-video w-full overflow-hidden bg-black"
+      className="pointer-events-none fixed inset-x-0 top-0 aspect-video w-full overflow-hidden bg-primary"
       style={{ transformOrigin: '50% 100%', zIndex }}
       animate={animateProps}
       transition={
@@ -70,12 +77,14 @@ export default function HeroVideo() {
           : { duration: 0.3 }
       }
     >
-      <iframe
-        src="https://player.vimeo.com/video/1193740756?background=1&autoplay=1&loop=1&muted=1&dnt=1"
-        title="Vídeo de apresentação"
-        allow="autoplay; fullscreen; picture-in-picture"
-        className="absolute inset-0 h-full w-full border-0"
-      />
+      {shouldMountIframe && (
+        <iframe
+          src="https://player.vimeo.com/video/1193740756?background=1&autoplay=1&loop=1&muted=1&dnt=1"
+          title="Vídeo de apresentação"
+          allow="autoplay; fullscreen; picture-in-picture"
+          className="absolute inset-0 h-full w-full border-0"
+        />
+      )}
 
       {/* Top gradient — helps Header readability in overlay mode */}
       <div
@@ -92,7 +101,7 @@ export default function HeroVideo() {
       {/* Soft full-coverage tint — unifies the video tone */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-black/20"
+        className="pointer-events-none absolute inset-0 bg-black/10"
       />
 
       {/* Bottom-right: vertical agency label */}

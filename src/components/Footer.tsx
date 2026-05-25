@@ -70,7 +70,7 @@ export default function Footer() {
   return (
     <footer
       ref={footerRef}
-      className="relative z-10 overflow-hidden bg-black text-white"
+      className="relative z-10 overflow-hidden bg-primary text-white"
     >
       {/* Parallax photo background */}
       <div
