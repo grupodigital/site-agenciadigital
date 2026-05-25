@@ -2,7 +2,6 @@
 
 import Image from 'next/image';
 import { motion } from 'motion/react';
-import Header from '@/components/Header';
 import AnimatedText from '@/components/ui/AnimatedText';
 import Button from '@/components/ui/Button';
 import ParallaxBg from '@/components/ui/ParallaxBg';
@@ -14,7 +13,6 @@ const IN_VIEW = { margin: '-15% 0px -15% 0px' };
 export default function AgenciaContent() {
   return (
     <>
-      <Header variant="overlay" />
       <main className="flex-1">
         {/* ============================== HERO (imagem) ============================== */}
         <section

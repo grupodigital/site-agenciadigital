@@ -15,7 +15,6 @@ import {
   MessageCircle,
   ShieldCheck,
 } from 'lucide-react';
-import Header from '@/components/Header';
 import AnimatedText from '@/components/ui/AnimatedText';
 import { enviarDenuncia, type DenunciaState } from '@/app/compliance/actions';
 
@@ -94,16 +93,24 @@ const INITIAL_STATE: DenunciaState = { status: 'idle' };
 export default function ComplianceContent() {
   return (
     <>
-      <Header variant="white" />
       <main className="flex-1">
         {/* ============================== HERO ============================== */}
-        <section className="relative z-10 bg-white px-4 pb-24 pt-36 sm:px-6 md:pb-32 md:pt-44">
-          <div className="mx-auto max-w-7xl">
+        <section
+          data-hero
+          className="relative z-10 bg-zinc-900 px-4 pb-24 pt-36 sm:px-6 md:pb-32 md:pt-44"
+        >
+          {/* Top gradient — Header readability */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/60 to-transparent"
+          />
+
+          <div className="relative mx-auto max-w-7xl">
             <motion.p
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, ease: EASE_OUT, delay: 0.2 }}
-              className="flex items-center gap-3 text-xs font-medium uppercase tracking-[0.22em] text-primary"
+              className="flex items-center gap-3 text-xs font-medium uppercase tracking-[0.22em] text-secondary"
             >
               <span
                 aria-hidden="true"
@@ -115,7 +122,7 @@ export default function ComplianceContent() {
             <AnimatedText
               as="h1"
               delay={0.35}
-              className="mt-6 block max-w-4xl text-4xl font-medium leading-[1.05] tracking-tight text-zinc-900 sm:text-5xl md:text-6xl lg:text-7xl"
+              className="mt-6 block max-w-4xl text-4xl font-medium leading-[1.05] tracking-tight text-white sm:text-5xl md:text-6xl lg:text-7xl"
             >
               Compliance.
             </AnimatedText>
@@ -132,7 +139,7 @@ export default function ComplianceContent() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, ease: EASE_OUT, delay: 0.9 }}
-              className="mt-8 max-w-2xl text-base leading-[1.8] text-zinc-600 sm:text-lg"
+              className="mt-8 max-w-2xl text-base leading-[1.8] text-white/75 sm:text-lg"
             >
               Conduzimos nossos negócios com integridade, conformidade legal e
               responsabilidade nas relações com clientes, fornecedores e órgãos

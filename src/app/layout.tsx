@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import BottomMenu from "@/components/BottomMenu";
 import Footer from "@/components/Footer";
+import Header from "@/components/Header";
 import HeroVideo from "@/components/HeroVideo";
 import PageTransition from "@/components/PageTransition";
 import { TransitionProvider } from "@/components/TransitionContext";
@@ -93,6 +94,7 @@ export default function RootLayout({
         <TransitionProvider>
           <HeroVideo />
           <PageTransition>{children}</PageTransition>
+          <Header />
           <Footer />
           <BottomMenu />
         </TransitionProvider>

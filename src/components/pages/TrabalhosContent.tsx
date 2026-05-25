@@ -4,7 +4,6 @@ import Image from 'next/image';
 import { AnimatePresence, motion } from 'motion/react';
 import { X } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import Header from '@/components/Header';
 import AnimatedText from '@/components/ui/AnimatedText';
 import Button from '@/components/ui/Button';
 
@@ -57,7 +56,6 @@ export default function TrabalhosContent() {
 
   return (
     <>
-      <Header variant="overlay" />
       <main className="flex-1">
         {/* ============================== HERO (imagem) ============================== */}
         <section
