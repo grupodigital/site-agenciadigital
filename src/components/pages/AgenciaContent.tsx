@@ -29,11 +29,6 @@ export default function AgenciaContent() {
             className="object-cover"
           />
 
-          {/* Top gradient — Header readability */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/60 to-transparent"
-          />
           {/* Bottom cinematic vignette into the next section */}
           <div
             aria-hidden

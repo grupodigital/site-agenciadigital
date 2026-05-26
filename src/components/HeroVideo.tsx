@@ -86,12 +86,6 @@ export default function HeroVideo() {
         />
       )}
 
-      {/* Top gradient — helps Header readability in overlay mode */}
-      <div
-        aria-hidden
-        className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/60 to-transparent"
-      />
-
       {/* Bottom gradient — cinematic vignette into the section below */}
       <div
         aria-hidden

@@ -32,10 +32,6 @@ export default function TrabalhosContent() {
 
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/60 to-transparent"
-          />
-          <div
-            aria-hidden
             className="pointer-events-none absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-black/85 via-black/35 to-transparent"
           />
           <div

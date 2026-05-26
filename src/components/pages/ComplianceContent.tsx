@@ -99,12 +99,6 @@ export default function ComplianceContent() {
           data-hero
           className="relative z-10 bg-primary px-4 pb-16 pt-28 sm:px-6 sm:pb-20 sm:pt-32 md:pb-32 md:pt-44"
         >
-          {/* Top gradient — Header readability */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/60 to-transparent"
-          />
-
           <div className="relative mx-auto max-w-7xl">
             <motion.p
               initial={{ opacity: 0, y: 12 }}
