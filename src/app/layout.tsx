@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import BottomMenu from "@/components/BottomMenu";
 import Footer from "@/components/Footer";
@@ -6,7 +6,7 @@ import Header from "@/components/Header";
 import HeroVideo from "@/components/HeroVideo";
 import PageTransition from "@/components/PageTransition";
 import { TransitionProvider } from "@/components/TransitionContext";
-import { SITE } from "@/lib/site";
+import { OFFICES, SITE, SOCIAL_LINKS } from "@/lib/site";
 import "./globals.css";
 
 const googleSans = localFont({
@@ -63,21 +63,55 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  themeColor: SITE.themeColor,
+};
+
+// One root AdvertisingAgency entity with all the data Google likes for
+// local rich results: full description, founding date, social profiles
+// (sameAs), states served, all office addresses, and reachable contact
+// points. The @id lets future schemas reference this one entity.
 const organizationLd = {
   "@context": "https://schema.org",
-  "@type": "Organization",
+  "@type": "AdvertisingAgency",
+  "@id": `${SITE.url}/#organization`,
   name: SITE.name,
+  alternateName: SITE.shortName,
   url: SITE.url,
   logo: `${SITE.url}/logo-ad-azul.svg`,
+  image: `${SITE.url}/opengraph-image`,
   description: SITE.description,
+  email: SITE.email,
+  foundingDate: SITE.foundingDate,
+  sameAs: SOCIAL_LINKS.map((s) => s.href),
+  areaServed: OFFICES.map((office) => ({
+    "@type": "State",
+    name: office.estado,
+  })),
+  address: OFFICES.map((office) => ({
+    "@type": "PostalAddress",
+    streetAddress: office.endereco,
+    addressLocality: office.cidade,
+    addressRegion: office.uf,
+    addressCountry: "BR",
+  })),
+  contactPoint: OFFICES.filter((o) => o.telefoneE164).map((office) => ({
+    "@type": "ContactPoint",
+    telephone: office.telefoneE164,
+    contactType: "customer service",
+    areaServed: "BR",
+    availableLanguage: ["Portuguese"],
+  })),
 };
 
 const websiteLd = {
   "@context": "https://schema.org",
   "@type": "WebSite",
+  "@id": `${SITE.url}/#website`,
   name: SITE.name,
   url: SITE.url,
   inLanguage: "pt-BR",
+  publisher: { "@id": `${SITE.url}/#organization` },
 };
 
 export default function RootLayout({

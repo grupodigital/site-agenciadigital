@@ -17,7 +17,7 @@ export default function AgenciaContent() {
         {/* ============================== HERO (imagem) ============================== */}
         <section
           data-hero
-          className="relative aspect-video w-full overflow-hidden bg-primary"
+          className="relative aspect-[3/4] w-full overflow-hidden bg-primary sm:aspect-video"
         >
           <Image
             src="/foto-bner.jpg"
@@ -56,7 +56,7 @@ export default function AgenciaContent() {
               >
                 <span
                   aria-hidden="true"
-                  className="inline-block h-1.5 w-1.5 rounded-full bg-secondary"
+                  className="inline-block h-1.5 w-1.5 bg-secondary"
                 />
                 A agência
               </motion.p>
@@ -101,7 +101,7 @@ export default function AgenciaContent() {
         {/* ============================== SOBRE / 22 ANOS ============================== */}
         <section
           id="sobre"
-          className="relative z-10 overflow-hidden bg-primary px-4 py-32 sm:px-6 md:py-40"
+          className="relative z-10 overflow-hidden bg-primary px-4 py-20 sm:px-6 sm:py-24 md:py-32 lg:py-40"
         >
           <ParallaxBg src="/about-bg232.jpeg" />
           <div aria-hidden="true" className="absolute inset-0 bg-primary/65" />
@@ -113,7 +113,7 @@ export default function AgenciaContent() {
             viewport={IN_VIEW}
             transition={{ duration: 1.4, ease: EASE_OUT }}
             className="pointer-events-none absolute -right-[3vw] top-[6%] z-[1] select-none font-semibold leading-none text-secondary"
-            style={{ fontSize: 'clamp(220px, 32vw, 520px)' }}
+            style={{ fontSize: 'clamp(140px, 32vw, 520px)' }}
           >
             22
           </motion.span>
@@ -138,7 +138,7 @@ export default function AgenciaContent() {
               <p className="flex items-center gap-3 text-xs font-medium uppercase tracking-[0.22em] text-secondary">
                 <span
                   aria-hidden="true"
-                  className="inline-block h-1.5 w-1.5 rounded-full bg-secondary"
+                  className="inline-block h-1.5 w-1.5 bg-secondary"
                 />
                 Quem somos
               </p>
@@ -209,7 +209,7 @@ export default function AgenciaContent() {
         {/* ============================== MISSÃO / VISÃO / VALORES ============================== */}
         <section
           id="mvv"
-          className="relative z-10 overflow-hidden bg-white px-4 py-32 sm:px-6 md:py-40"
+          className="relative z-10 overflow-hidden bg-white px-4 py-20 sm:px-6 sm:py-24 md:py-32 lg:py-40"
         >
           <div className="relative z-[2] mx-auto max-w-7xl">
             <motion.div
@@ -222,7 +222,7 @@ export default function AgenciaContent() {
               <p className="flex items-center gap-3 text-xs font-medium uppercase tracking-[0.22em] text-primary">
                 <span
                   aria-hidden="true"
-                  className="inline-block h-1.5 w-1.5 rounded-full bg-secondary"
+                  className="inline-block h-1.5 w-1.5 bg-secondary"
                 />
                 O que nos guia
               </p>
@@ -283,7 +283,7 @@ export default function AgenciaContent() {
                         >
                           <span
                             aria-hidden="true"
-                            className="inline-block h-1.5 w-1.5 rounded-full bg-secondary"
+                            className="inline-block h-1.5 w-1.5 bg-secondary"
                           />
                           {v}
                         </li>
@@ -299,7 +299,7 @@ export default function AgenciaContent() {
         {/* ============================== ATUAÇÃO REGIONAL ============================== */}
         <section
           id="atuacao"
-          className="relative z-10 overflow-hidden bg-surface px-4 py-32 sm:px-6 md:py-40"
+          className="relative z-10 overflow-hidden bg-surface px-4 py-20 sm:px-6 sm:py-24 md:py-32 lg:py-40"
         >
           <div className="relative z-[2] mx-auto max-w-7xl">
             <motion.div
@@ -312,7 +312,7 @@ export default function AgenciaContent() {
               <p className="flex items-center gap-3 text-xs font-medium uppercase tracking-[0.22em] text-primary">
                 <span
                   aria-hidden="true"
-                  className="inline-block h-1.5 w-1.5 rounded-full bg-secondary"
+                  className="inline-block h-1.5 w-1.5 bg-secondary"
                 />
                 Atuação
               </p>
@@ -379,7 +379,7 @@ export default function AgenciaContent() {
         {/* ============================== PRÊMIOS ============================== */}
         <section
           id="premios"
-          className="relative z-10 overflow-hidden bg-primary px-4 py-32 text-white sm:px-6 md:py-40"
+          className="relative z-10 overflow-hidden bg-primary px-4 py-20 text-white sm:px-6 sm:py-24 md:py-32 lg:py-40"
         >
           <motion.span
             aria-hidden="true"
@@ -388,7 +388,7 @@ export default function AgenciaContent() {
             viewport={IN_VIEW}
             transition={{ duration: 1.4, ease: EASE_OUT }}
             className="pointer-events-none absolute -left-[2vw] bottom-[6%] z-[1] select-none font-semibold leading-none text-white"
-            style={{ fontSize: 'clamp(180px, 26vw, 420px)' }}
+            style={{ fontSize: 'clamp(120px, 26vw, 420px)' }}
           >
             ★
           </motion.span>
@@ -404,7 +404,7 @@ export default function AgenciaContent() {
               <p className="flex items-center gap-3 text-xs font-medium uppercase tracking-[0.22em] text-secondary">
                 <span
                   aria-hidden="true"
-                  className="inline-block h-1.5 w-1.5 rounded-full bg-secondary"
+                  className="inline-block h-1.5 w-1.5 bg-secondary"
                 />
                 Reconhecimento
               </p>
@@ -467,7 +467,7 @@ export default function AgenciaContent() {
         {/* ============================== CTA ============================== */}
         <section
           id="cta"
-          className="relative z-10 overflow-hidden bg-white px-4 py-32 sm:px-6 md:py-40"
+          className="relative z-10 overflow-hidden bg-white px-4 py-20 sm:px-6 sm:py-24 md:py-32 lg:py-40"
         >
           <div className="relative z-[2] mx-auto max-w-5xl text-center">
             <motion.p
@@ -479,7 +479,7 @@ export default function AgenciaContent() {
             >
               <span
                 aria-hidden="true"
-                className="inline-block h-1.5 w-1.5 rounded-full bg-secondary"
+                className="inline-block h-1.5 w-1.5 bg-secondary"
               />
               Vamos conversar
             </motion.p>

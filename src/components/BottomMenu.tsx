@@ -149,7 +149,7 @@ export default function BottomMenu() {
         )}
       </AnimatePresence>
 
-      <div className="pointer-events-none fixed inset-x-0 bottom-4 z-[70] flex flex-col items-center px-4">
+      <div className="pointer-events-none fixed inset-x-0 bottom-[calc(env(safe-area-inset-bottom)+1rem)] z-[70] flex flex-col items-center px-4">
         {/* Menu panel — rises from below the bar when opening, slides back down on close. */}
         <AnimatePresence>
           {open && (

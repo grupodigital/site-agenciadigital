@@ -92,7 +92,7 @@ export default function Footer() {
       </div>
 
       {/* Top content */}
-      <div className="relative z-[3] mx-auto w-full max-w-7xl px-4 pt-20 pb-95 sm:px-6 md:pt-25 lg:pb-80 xl:pb-70">
+      <div className="relative z-[3] mx-auto w-full max-w-7xl px-4 pt-16 pb-32 sm:px-6 sm:pt-20 sm:pb-40 md:pt-24 md:pb-48 lg:pb-64 xl:pb-72">
         {/* Address grid */}
         <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 md:grid-cols-3">
           {ESCRITORIOS.map((escritorio, i) => (
@@ -140,7 +140,7 @@ export default function Footer() {
         />
       </div>
 
-      <div className="pointer-events-none absolute inset-x-0 bottom-3 z-10 flex justify-center gap-20 text-center text-sm text-white/80">
+      <div className="pointer-events-none absolute inset-x-0 bottom-3 z-10 flex flex-col items-center gap-1 px-4 text-center text-xs text-white/80 sm:flex-row sm:justify-center sm:gap-20 sm:text-sm">
         <p>@2026 Digital Comunicação.</p>
         <p>Todos os direitos reservados.</p>
       </div>

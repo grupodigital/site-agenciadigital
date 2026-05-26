@@ -6,6 +6,8 @@ import Hero from "@/components/Hero";
 import AnimatedText from "@/components/ui/AnimatedText";
 import Button from "@/components/ui/Button";
 import ParallaxBg from "@/components/ui/ParallaxBg";
+import VideoStack from "@/components/ui/VideoStack";
+import { TRABALHOS_HIGHLIGHTS } from "@/lib/trabalhos";
 
 const EASE_OUT = [0.16, 1, 0.3, 1] as const;
 const EASE_STD = [0.4, 0, 0.2, 1] as const;
@@ -20,7 +22,7 @@ export default function HomeContent() {
         {/* ============================== SOBRE ============================== */}
         <section
           id="sobre"
-          className="relative z-10 overflow-hidden bg-primary px-4 py-32 sm:px-6 md:py-40"
+          className="relative z-10 overflow-hidden bg-primary px-4 py-20 sm:px-6 sm:py-24 md:py-32 lg:py-40"
         >
           <ParallaxBg src="/about-bg232.jpeg" />
           <div aria-hidden="true" className="absolute inset-0 bg-primary/65" />
@@ -33,7 +35,7 @@ export default function HomeContent() {
             viewport={IN_VIEW}
             transition={{ duration: 1.4, ease: EASE_OUT }}
             className="pointer-events-none absolute -right-[3vw] top-[6%] z-[1] select-none font-semibold leading-none text-secondary"
-            style={{ fontSize: 'clamp(220px, 32vw, 520px)' }}
+            style={{ fontSize: 'clamp(140px, 32vw, 520px)' }}
           >
             22
           </motion.span>
@@ -59,7 +61,7 @@ export default function HomeContent() {
               <p className="flex items-center gap-3 text-xs font-medium uppercase tracking-[0.22em] text-secondary">
                 <span
                   aria-hidden="true"
-                  className="inline-block h-1.5 w-1.5 rounded-full bg-secondary"
+                  className="inline-block h-1.5 w-1.5 bg-secondary"
                 />
                 Sobre a agência
               </p>
@@ -128,7 +130,7 @@ export default function HomeContent() {
         {/* ============================== CLIENTES ============================== */}
         <section
           id="clientes"
-          className="relative z-10 overflow-hidden bg-white px-4 py-32 sm:px-6 md:py-40"
+          className="relative z-10 overflow-hidden bg-white px-4 py-20 sm:px-6 sm:py-24 md:py-32 lg:py-40"
         >
           <div className="relative z-[2] mx-auto max-w-7xl">
             <motion.div
@@ -140,7 +142,7 @@ export default function HomeContent() {
               <p className="flex items-center gap-3 text-xs font-medium uppercase tracking-[0.22em] text-primary">
                 <span
                   aria-hidden="true"
-                  className="inline-block h-1.5 w-1.5 rounded-full bg-secondary"
+                  className="inline-block h-1.5 w-1.5 bg-secondary"
                 />
                 Quem confia na gente
               </p>
@@ -194,11 +196,53 @@ export default function HomeContent() {
           </motion.div>
         </section>
 
+        {/* ============================== TRABALHOS (cards empilháveis) ============================== */}
+        <section
+          id="trabalhos"
+          className="relative z-10 bg-surface px-4 pt-20 pb-10 sm:px-6 sm:pt-28 sm:pb-12 md:pt-40 md:pb-16"
+        >
+          <div className="relative mx-auto mb-12 max-w-7xl sm:mb-20 md:mb-24">
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={IN_VIEW}
+              transition={{ duration: 0.7, ease: EASE_OUT }}
+            >
+              <p className="flex items-center gap-3 text-xs font-medium uppercase tracking-[0.22em] text-primary">
+                <span
+                  aria-hidden="true"
+                  className="inline-block h-1.5 w-1.5 bg-secondary"
+                />
+                Últimos trabalhos
+              </p>
+
+              <AnimatedText
+                as="h2"
+                delay={0.15}
+                className="mt-6 block max-w-2xl text-3xl font-medium leading-[1.1] tracking-tight text-zinc-900 sm:text-4xl md:text-5xl"
+              >
+                Algumas produções em destaque
+              </AnimatedText>
+
+              <motion.span
+                aria-hidden="true"
+                initial={{ scaleX: 0 }}
+                whileInView={{ scaleX: 1 }}
+                viewport={IN_VIEW}
+                transition={{ duration: 0.8, ease: EASE_STD, delay: 0.55 }}
+                className="mt-8 block h-px w-24 origin-left bg-secondary"
+              />
+            </motion.div>
+          </div>
+
+          <VideoStack items={TRABALHOS_HIGHLIGHTS} />
+        </section>
+
         {/* ============================== SELOS ============================== */}
         <section
           id="selos"
           aria-label="Certificações e filiações"
-          className="relative z-10 border-t border-zinc-200/70 bg-white px-4 py-16 sm:px-6 md:py-20"
+          className="relative z-10 border-t border-zinc-200/70 bg-white px-4 py-12 sm:px-6 sm:py-14 md:py-20"
         >
           <motion.div
             initial={{ opacity: 0, y: 12 }}

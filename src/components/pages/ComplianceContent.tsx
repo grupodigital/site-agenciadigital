@@ -97,7 +97,7 @@ export default function ComplianceContent() {
         {/* ============================== HERO ============================== */}
         <section
           data-hero
-          className="relative z-10 bg-primary px-4 pb-24 pt-36 sm:px-6 md:pb-32 md:pt-44"
+          className="relative z-10 bg-primary px-4 pb-16 pt-28 sm:px-6 sm:pb-20 sm:pt-32 md:pb-32 md:pt-44"
         >
           {/* Top gradient — Header readability */}
           <div
@@ -114,7 +114,7 @@ export default function ComplianceContent() {
             >
               <span
                 aria-hidden="true"
-                className="inline-block h-1.5 w-1.5 rounded-full bg-secondary"
+                className="inline-block h-1.5 w-1.5 bg-secondary"
               />
               Integridade
             </motion.p>
@@ -152,7 +152,7 @@ export default function ComplianceContent() {
         {/* ============================== DOCUMENTOS ============================== */}
         <section
           id="documentos"
-          className="relative z-10 bg-surface px-4 py-24 sm:px-6 md:py-32"
+          className="relative z-10 bg-surface px-4 py-16 sm:px-6 sm:py-20 md:py-32"
         >
           <div className="mx-auto max-w-7xl">
             <motion.div
@@ -165,7 +165,7 @@ export default function ComplianceContent() {
               <p className="flex items-center gap-3 text-xs font-medium uppercase tracking-[0.22em] text-primary">
                 <span
                   aria-hidden="true"
-                  className="inline-block h-1.5 w-1.5 rounded-full bg-secondary"
+                  className="inline-block h-1.5 w-1.5 bg-secondary"
                 />
                 Documentos
               </p>
@@ -241,7 +241,7 @@ export default function ComplianceContent() {
         {/* ============================== CANAL DE DENÚNCIA ============================== */}
         <section
           id="canal"
-          className="relative z-10 bg-white px-4 py-24 sm:px-6 md:py-32"
+          className="relative z-10 bg-white px-4 py-16 sm:px-6 sm:py-20 md:py-32"
         >
           <div className="mx-auto max-w-7xl">
             <motion.div
@@ -254,7 +254,7 @@ export default function ComplianceContent() {
               <p className="flex items-center gap-3 text-xs font-medium uppercase tracking-[0.22em] text-primary">
                 <span
                   aria-hidden="true"
-                  className="inline-block h-1.5 w-1.5 rounded-full bg-secondary"
+                  className="inline-block h-1.5 w-1.5 bg-secondary"
                 />
                 Denúncia
               </p>
@@ -331,7 +331,7 @@ export default function ComplianceContent() {
         </section>
 
         {/* ============================== AVISO DE SEPARAÇÃO ============================== */}
-        <section className="relative z-10 bg-white px-4 pb-24 sm:px-6 md:pb-32">
+        <section className="relative z-10 bg-white px-4 pb-16 sm:px-6 sm:pb-20 md:pb-32">
           <p className="mx-auto max-w-4xl border-l-2 border-zinc-200 bg-zinc-50 px-6 py-5 text-sm italic leading-relaxed text-zinc-500 md:px-8 md:py-6">
             Para dúvidas, solicitações comerciais ou questões sobre nossos
             serviços, utilize nossa página de Contato. Este canal é exclusivo
@@ -425,7 +425,7 @@ function DenunciaForm() {
         <div className="flex items-center gap-3 border-b border-zinc-200 bg-primary px-6 py-5 md:px-10 md:py-6">
           <span
             aria-hidden="true"
-            className="inline-block h-1.5 w-1.5 rounded-full bg-secondary"
+            className="inline-block h-1.5 w-1.5 bg-secondary"
           />
           <p className="text-xs font-medium uppercase tracking-[0.22em] text-secondary">
             Manifestação recebida
@@ -453,7 +453,7 @@ function DenunciaForm() {
         <p className="flex items-center gap-3 text-xs font-medium uppercase tracking-[0.22em] text-primary">
           <span
             aria-hidden="true"
-            className="inline-block h-1.5 w-1.5 rounded-full bg-secondary"
+            className="inline-block h-1.5 w-1.5 bg-secondary"
           />
           Formulário de manifestação
         </p>
@@ -535,7 +535,7 @@ function DenunciaForm() {
         <p className="flex items-center gap-3 text-xs font-medium uppercase tracking-[0.22em] text-zinc-500">
           <span
             aria-hidden="true"
-            className="inline-block h-1.5 w-1.5 rounded-full bg-secondary"
+            className="inline-block h-1.5 w-1.5 bg-secondary"
           />
           Proteção de dados
         </p>

@@ -64,7 +64,7 @@ export default function HeroVideo() {
   return (
     <motion.div
       aria-hidden={phase === 'hidden'}
-      className="pointer-events-none fixed inset-x-0 top-0 aspect-video w-full overflow-hidden bg-primary"
+      className="pointer-events-none fixed inset-x-0 top-0 aspect-[3/4] w-full overflow-hidden bg-primary sm:aspect-video"
       style={{ transformOrigin: '50% 100%', zIndex }}
       animate={animateProps}
       transition={
@@ -107,7 +107,7 @@ export default function HeroVideo() {
       {/* Bottom-right: vertical agency label */}
       <div className="pointer-events-none absolute bottom-6 right-6 z-10 hidden items-center gap-3 [writing-mode:vertical-rl] rotate-180 text-[10px] font-medium uppercase tracking-[0.32em] text-white/55 sm:bottom-10 sm:right-10 md:flex">
         Digital Comunicação
-        <span aria-hidden="true" className="inline-block h-1 w-1 rounded-full bg-secondary" />
+        <span aria-hidden="true" className="inline-block h-1 w-1 bg-secondary" />
       </div>
 
       {/* Bottom hairline — closes the frame, draws on mount */}

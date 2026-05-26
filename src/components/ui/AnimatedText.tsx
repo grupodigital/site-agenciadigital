@@ -24,8 +24,13 @@ export default function AnimatedText({
 }: Props) {
   const ref = useRef<HTMLElement>(null);
   // Trigger a little inside the viewport so the animation kicks off as the
-  // element is entering, not exactly at the edge.
-  const isInView = useInView(ref, { margin: '-10% 0px -10% 0px' });
+  // element is entering, not exactly at the edge. `once: true` so the
+  // animation plays only on the first scroll-in and doesn't replay each
+  // time the element leaves and re-enters the viewport.
+  const isInView = useInView(ref, {
+    margin: '-10% 0px -10% 0px',
+    once: true,
+  });
   const shouldReduceMotion = useReducedMotion();
   // If we're being rendered inside the rising PageTransition overlay, skip
   // the entry animation — the real {children} instance will play it once
@@ -63,7 +68,11 @@ export default function AnimatedText({
                 <motion.span
                   key={i}
                   aria-hidden
-                  className="inline-block"
+                  // `opacity-0` keeps the SSR markup hidden so the text
+                  // doesn't flash visible before motion hydrates and applies
+                  // its own opacity. Once motion sets an inline style, it
+                  // overrides the class.
+                  className="inline-block opacity-0"
                   initial={{ opacity: 0, x: -8 }}
                   animate={
                     isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -8 }
