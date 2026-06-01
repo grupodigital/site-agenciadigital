@@ -1,7 +1,8 @@
 'use client';
 
 import { AnimatePresence, motion } from 'motion/react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 type Props = {
   videoId: string | null;
@@ -9,6 +10,15 @@ type Props = {
 };
 
 export default function YouTubeModal({ videoId, onClose }: Props) {
+  // The modal must escape the page's stacking contexts (sections use
+  // `relative z-10`, which would trap our z-index below the fixed Header at
+  // z-50 and make the close button unclickable). Portal it to <body>, which
+  // lives at the root stacking context.
+  const [mounted, setMounted] = useState(false);
+  // Standard client-mount gate for a portal — runs once to flip SSR→client.
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => setMounted(true), []);
+
   useEffect(() => {
     if (!videoId) return;
 
@@ -26,7 +36,9 @@ export default function YouTubeModal({ videoId, onClose }: Props) {
     };
   }, [videoId, onClose]);
 
-  return (
+  if (!mounted) return null;
+
+  return createPortal(
     <AnimatePresence>
       {videoId && (
         <motion.div
@@ -39,13 +51,13 @@ export default function YouTubeModal({ videoId, onClose }: Props) {
           role="dialog"
           aria-modal="true"
           aria-label="Reprodutor de vídeo"
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm sm:p-8"
+          className="fixed inset-0 z-[200] flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm sm:p-8"
         >
           <button
             type="button"
             onClick={onClose}
             aria-label="Fechar vídeo"
-            className="fixed right-4 top-4 z-[101] flex h-11 w-11 items-center justify-center bg-white/10 text-white backdrop-blur transition hover:bg-white/20 sm:right-6 sm:top-6"
+            className="fixed right-4 top-4 z-[201] flex h-11 w-11 items-center justify-center bg-white/10 text-white backdrop-blur transition hover:bg-white/20 sm:right-6 sm:top-6"
           >
             <svg
               width="22"
@@ -81,6 +93,7 @@ export default function YouTubeModal({ videoId, onClose }: Props) {
           </motion.div>
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body,
   );
 }

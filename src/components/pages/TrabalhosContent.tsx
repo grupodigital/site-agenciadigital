@@ -130,7 +130,7 @@ export default function TrabalhosContent() {
             </motion.div>
           </div>
 
-          <VideoStack items={TRABALHOS} />
+          <VideoStack items={TRABALHOS} columns={2} />
         </section>
 
         {/* ============================== CTA ============================== */}

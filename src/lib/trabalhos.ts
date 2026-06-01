@@ -32,6 +32,6 @@ export const TRABALHOS: readonly Trabalho[] = [
 ];
 
 // First N items shown on the home page as recent highlights.
-export const TRABALHOS_HIGHLIGHTS = TRABALHOS.slice(0, 5);
+export const TRABALHOS_HIGHLIGHTS = TRABALHOS.slice(0, 4);
 
 export const VIDEO_UPLOAD_DATE_FALLBACK = "2024-01-01T00:00:00-04:00";

@@ -152,7 +152,7 @@ export default function HomeContent() {
                 delay={0.15}
                 className="mt-6 block max-w-2xl text-3xl font-medium leading-[1.1] tracking-tight text-zinc-900 sm:text-4xl md:text-5xl"
               >
-                Marcas que escolheram crescer conosco
+                Nossos clientes e parceiros
               </AnimatedText>
 
               <motion.span
@@ -235,7 +235,7 @@ export default function HomeContent() {
             </motion.div>
           </div>
 
-          <VideoStack items={TRABALHOS_HIGHLIGHTS} />
+          <VideoStack items={TRABALHOS_HIGHLIGHTS} columns={2} />
         </section>
 
         {/* ============================== SELOS ============================== */}

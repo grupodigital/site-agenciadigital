@@ -143,6 +143,88 @@ export default function ComplianceContent() {
           </div>
         </section>
 
+        {/* ============================== CANAL DE DENÚNCIA ============================== */}
+        <section
+          id="canal"
+          className="relative z-10 bg-white px-4 py-16 sm:px-6 sm:py-20 md:py-32"
+        >
+          <div className="mx-auto max-w-7xl">
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={IN_VIEW}
+              transition={{ duration: 0.7, ease: EASE_OUT }}
+              className="max-w-3xl"
+            >
+              <p className="flex items-center gap-3 text-xs font-medium uppercase tracking-[0.22em] text-primary">
+                <span
+                  aria-hidden="true"
+                  className="inline-block h-1.5 w-1.5 bg-secondary"
+                />
+                Denúncia
+              </p>
+
+              <AnimatedText
+                as="h2"
+                delay={0.15}
+                className="mt-6 block text-3xl font-medium leading-[1.1] tracking-tight text-zinc-900 sm:text-4xl md:text-5xl"
+              >
+                Canal de Denúncia.
+              </AnimatedText>
+
+              <motion.span
+                aria-hidden="true"
+                initial={{ scaleX: 0 }}
+                whileInView={{ scaleX: 1 }}
+                viewport={IN_VIEW}
+                transition={{ duration: 0.8, ease: EASE_STD, delay: 0.55 }}
+                className="mt-8 block h-px w-24 origin-left bg-secondary"
+              />
+
+              <motion.p
+                initial={{ opacity: 0, y: 12 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={IN_VIEW}
+                transition={{ duration: 0.7, ease: EASE_OUT, delay: 0.45 }}
+                className="mt-8 max-w-2xl text-base leading-[1.8] text-zinc-600 sm:text-lg"
+              >
+                Utilize este canal para relatar condutas que violem nosso
+                Programa de Integridade, nossas políticas ou a legislação. As
+                manifestações podem ser identificadas ou anônimas e são
+                tratadas com sigilo pelo Comitê de Ética e Integridade da
+                Digital.
+              </motion.p>
+            </motion.div>
+
+            {/* Contact cards */}
+            <div className="mt-14 grid grid-cols-1 gap-px bg-zinc-200 md:mt-20 md:grid-cols-2">
+              <ContactCard
+                href={
+                  WHATSAPP_E164
+                    ? `https://wa.me/${WHATSAPP_E164}?text=${encodeURIComponent(
+                        'Olá, gostaria de falar com a Ouvidoria da Digital.',
+                      )}`
+                    : null
+                }
+                icon={MessageCircle}
+                label="WhatsApp da Ouvidoria"
+                value={WHATSAPP_DISPLAY}
+                hint="Atendimento em horário comercial. Mensagens fora desse horário são respondidas no próximo dia útil."
+                delay={0}
+              />
+              <ContactCard
+                href={`mailto:${EMAIL_OUVIDORIA}`}
+                icon={Mail}
+                label="E-mail da Ouvidoria"
+                value={EMAIL_OUVIDORIA}
+                hint="Retorno em até 10 dias úteis pelo Comitê de Ética e Integridade."
+                delay={0.1}
+              />
+            </div>
+
+          </div>
+        </section>
+
         {/* ============================== DOCUMENTOS ============================== */}
         <section
           id="documentos"
@@ -232,106 +314,30 @@ export default function ComplianceContent() {
           </div>
         </section>
 
-        {/* ============================== CANAL DE DENÚNCIA ============================== */}
-        <section
-          id="canal"
-          className="relative z-10 bg-white px-4 py-16 sm:px-6 sm:py-20 md:py-32"
-        >
-          <div className="mx-auto max-w-7xl">
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={IN_VIEW}
-              transition={{ duration: 0.7, ease: EASE_OUT }}
-              className="max-w-3xl"
-            >
-              <p className="flex items-center gap-3 text-xs font-medium uppercase tracking-[0.22em] text-primary">
-                <span
-                  aria-hidden="true"
-                  className="inline-block h-1.5 w-1.5 bg-secondary"
-                />
-                Denúncia
-              </p>
-
-              <AnimatedText
-                as="h2"
-                delay={0.15}
-                className="mt-6 block text-3xl font-medium leading-[1.1] tracking-tight text-zinc-900 sm:text-4xl md:text-5xl"
-              >
-                Canal de Denúncia.
-              </AnimatedText>
-
-              <motion.span
-                aria-hidden="true"
-                initial={{ scaleX: 0 }}
-                whileInView={{ scaleX: 1 }}
-                viewport={IN_VIEW}
-                transition={{ duration: 0.8, ease: EASE_STD, delay: 0.55 }}
-                className="mt-8 block h-px w-24 origin-left bg-secondary"
-              />
-
-              <motion.p
-                initial={{ opacity: 0, y: 12 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={IN_VIEW}
-                transition={{ duration: 0.7, ease: EASE_OUT, delay: 0.45 }}
-                className="mt-8 max-w-2xl text-base leading-[1.8] text-zinc-600 sm:text-lg"
-              >
-                Utilize este canal para relatar condutas que violem nosso
-                Programa de Integridade, nossas políticas ou a legislação. As
-                manifestações podem ser identificadas ou anônimas e são
-                tratadas com sigilo pelo Comitê de Ética e Integridade da
-                Digital.
-              </motion.p>
-            </motion.div>
-
-            {/* Contact cards */}
-            <div className="mt-14 grid grid-cols-1 gap-px bg-zinc-200 md:mt-20 md:grid-cols-2">
-              <ContactCard
-                href={
-                  WHATSAPP_E164
-                    ? `https://wa.me/${WHATSAPP_E164}?text=${encodeURIComponent(
-                        'Olá, gostaria de falar com a Ouvidoria da Digital.',
-                      )}`
-                    : null
-                }
-                icon={MessageCircle}
-                label="WhatsApp da Ouvidoria"
-                value={WHATSAPP_DISPLAY}
-                hint="Atendimento em horário comercial. Mensagens fora desse horário são respondidas no próximo dia útil."
-                delay={0}
-              />
-              <ContactCard
-                href={`mailto:${EMAIL_OUVIDORIA}`}
-                icon={Mail}
-                label="E-mail da Ouvidoria"
-                value={EMAIL_OUVIDORIA}
-                hint="Retorno em até 10 dias úteis pelo Comitê de Ética e Integridade."
-                delay={0.1}
-              />
-            </div>
-
-            {/* Form */}
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={IN_VIEW}
-              transition={{ duration: 0.7, ease: EASE_OUT }}
-              className="mt-16 md:mt-20"
-            >
-              <DenunciaForm />
-            </motion.div>
-          </div>
-        </section>
-
         {/* ============================== AVISO DE SEPARAÇÃO ============================== */}
-        <section className="relative z-10 bg-white px-4 pb-16 sm:px-6 sm:pb-20 md:pb-32">
+        <section className="relative z-10 bg-white px-4 pt-16 sm:px-6 sm:pt-20 md:pt-32">
           <p className="mx-auto max-w-4xl border-l-2 border-zinc-200 bg-zinc-50 px-6 py-5 text-sm italic leading-relaxed text-zinc-500 md:px-8 md:py-6">
             Para dúvidas, solicitações comerciais ou questões sobre nossos
             serviços, utilize nossa página de Contato. Este canal é exclusivo
             para denúncias de condutas antiéticas ou que violem nossas
             políticas.
           </p>
+        </section>
+
+        {/* ============================== FORMULÁRIO ============================== */}
+        <section
+          id="formulario"
+          className="relative z-10 bg-white px-4 pb-16 pt-12 sm:px-6 sm:pb-20 md:pb-32"
+        >
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={IN_VIEW}
+            transition={{ duration: 0.7, ease: EASE_OUT }}
+            className="mx-auto max-w-7xl"
+          >
+            <DenunciaForm />
+          </motion.div>
         </section>
       </main>
     </>
