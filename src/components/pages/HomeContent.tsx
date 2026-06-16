@@ -188,7 +188,7 @@ export default function HomeContent() {
                     height={160}
                     sizes="(max-width: 640px) 30vw, 200px"
                     quality={65}
-                    className="h-auto w-full opacity-55 grayscale transition duration-500 hover:opacity-100 hover:grayscale-0"
+                    className="h-auto w-full transition duration-500"
                   />
                 </div>
               ))}
@@ -263,7 +263,7 @@ export default function HomeContent() {
                   height={120}
                   sizes="128px"
                   quality={65}
-                  className="h-auto w-full opacity-55 grayscale transition duration-500 hover:opacity-100 hover:grayscale-0"
+                  className="h-auto w-full transition duration-500"
                 />
               </div>
             ))}
