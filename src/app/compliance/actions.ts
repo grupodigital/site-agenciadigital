@@ -1,36 +1,38 @@
 'use server';
 
 // Server Action do canal de denúncia. Recebe o FormData do formulário em
-// ComplianceContent, valida do lado servidor e retorna o estado para o
+// ComplianceContent, valida do lado servidor e encaminha a manifestação por
+// e-mail (SMTP via src/lib/mailer) ao Comitê de Ética. Retorna o estado para o
 // useActionState do cliente exibir mensagens de erro/sucesso.
-//
-// TODO (operacional / TI): integrar com servidor de e-mail (Resend, SES,
-// SMTP institucional) para encaminhar a manifestação a
-// ouvidoria@agenciadigital.com.vc. Hoje só registra em log e retorna
-// sucesso, para a UI ficar 100% navegável enquanto o backend de envio é
-// definido.
 
-const TIPOS_RELATO_VALIDOS = new Set([
-  'agressao-fisica',
-  'assedio-moral',
-  'assedio-sexual',
-  'conflito-interesse',
-  'corrupcao',
-  'desvio-ativos',
-  'discriminacao',
-  'favorecimento',
-  'fraudes',
-  'roubo-furto',
-  'vazamento',
-]);
+import { sendMail } from '@/lib/mailer';
 
-const RELACIONAMENTOS_VALIDOS = new Set([
-  'cliente',
-  'colaborador',
-  'cooperador',
-  'fornecedor',
-  'prestador',
-]);
+// Rótulos legíveis para compor o e-mail. As chaves espelham os values das
+// options em ComplianceContent.tsx.
+const TIPOS_RELATO: Record<string, string> = {
+  'agressao-fisica': 'Agressão física',
+  'assedio-moral': 'Assédio moral',
+  'assedio-sexual': 'Assédio sexual',
+  'conflito-interesse': 'Conflito de interesse',
+  corrupcao: 'Corrupção',
+  'desvio-ativos': 'Desvio de ativos',
+  discriminacao: 'Discriminação / Racismo / Preconceito',
+  favorecimento: 'Favorecimento',
+  fraudes: 'Fraudes',
+  'roubo-furto': 'Roubo / Furto',
+  vazamento: 'Vazamento de informações',
+};
+
+const RELACIONAMENTOS: Record<string, string> = {
+  cliente: 'Cliente',
+  colaborador: 'Colaborador',
+  cooperador: 'Cooperador',
+  fornecedor: 'Fornecedor',
+  prestador: 'Prestador de Serviços',
+};
+
+const TIPOS_RELATO_VALIDOS = new Set(Object.keys(TIPOS_RELATO));
+const RELACIONAMENTOS_VALIDOS = new Set(Object.keys(RELACIONAMENTOS));
 
 export type DenunciaState = {
   status: 'idle' | 'success' | 'error';
@@ -80,18 +82,63 @@ export async function enviarDenuncia(
     return { status: 'error', errors };
   }
 
-  // Registro mínimo para auditoria do recebimento enquanto o envio de
-  // e-mail real não está integrado. Não logamos a descrição completa para
-  // evitar vazar conteúdo sensível em logs.
-  console.info('[compliance/denuncia] manifestação recebida', {
-    tipoRelato,
-    relacionamento,
-    descricaoTamanho: descricao.length,
-    identificado: Boolean(identificar),
-    nome: identificar ? nome : undefined,
-    email: identificar ? email : undefined,
-    recebidoEm: new Date().toISOString(),
+  const identificado = Boolean(identificar);
+  const recebidoEm = new Date().toLocaleString('pt-BR', {
+    timeZone: 'America/Sao_Paulo',
   });
+  const tipoLabel = TIPOS_RELATO[tipoRelato];
+  const relacaoLabel = RELACIONAMENTOS[relacionamento];
+
+  const linhas = [
+    'Nova manifestação recebida pelo Canal de Denúncia (Compliance).',
+    '',
+    `Tipo de relato: ${tipoLabel}`,
+    `Relacionamento: ${relacaoLabel}`,
+    `Identificação: ${identificado ? 'Identificada' : 'Anônima'}`,
+    ...(identificado ? [`Nome: ${nome}`, `E-mail para retorno: ${email}`] : []),
+    `Recebido em: ${recebidoEm}`,
+    '',
+    'Descrição:',
+    descricao,
+  ];
+
+  const esc = (s: string) =>
+    s
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+
+  const html = `
+    <h2>Nova manifestação — Canal de Denúncia (Compliance)</h2>
+    <table cellpadding="6" style="border-collapse:collapse;font-family:Arial,sans-serif;font-size:14px">
+      <tr><td><strong>Tipo de relato</strong></td><td>${esc(tipoLabel)}</td></tr>
+      <tr><td><strong>Relacionamento</strong></td><td>${esc(relacaoLabel)}</td></tr>
+      <tr><td><strong>Identificação</strong></td><td>${identificado ? 'Identificada' : 'Anônima'}</td></tr>
+      ${identificado ? `<tr><td><strong>Nome</strong></td><td>${esc(nome)}</td></tr>` : ''}
+      ${identificado ? `<tr><td><strong>E-mail para retorno</strong></td><td>${esc(email)}</td></tr>` : ''}
+      <tr><td><strong>Recebido em</strong></td><td>${esc(recebidoEm)}</td></tr>
+    </table>
+    <p style="font-family:Arial,sans-serif;font-size:14px"><strong>Descrição:</strong></p>
+    <p style="font-family:Arial,sans-serif;font-size:14px;white-space:pre-wrap">${esc(descricao)}</p>
+  `;
+
+  try {
+    await sendMail({
+      subject: `[Compliance] Nova denúncia — ${tipoLabel}`,
+      text: linhas.join('\n'),
+      html,
+      // Permite responder direto a quem se identificou.
+      replyTo: identificado ? email : undefined,
+    });
+  } catch (err) {
+    // Não logamos a descrição (conteúdo sensível); só o erro de envio.
+    console.error('[compliance/denuncia] falha ao enviar e-mail', err);
+    return {
+      status: 'error',
+      message:
+        'Não foi possível enviar sua manifestação agora. Tente novamente em alguns minutos ou utilize o e-mail da Ouvidoria.',
+    };
+  }
 
   return {
     status: 'success',

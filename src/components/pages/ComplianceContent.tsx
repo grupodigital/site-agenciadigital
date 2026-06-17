@@ -569,7 +569,7 @@ function DenunciaForm() {
       <div className="flex flex-wrap items-center justify-between gap-4 border-t border-zinc-200 bg-white px-6 py-6 md:px-10 md:py-7">
         {state.status === 'error' ? (
           <p className="text-sm text-red-600" role="alert">
-            Revise os campos destacados e envie novamente.
+            {state.message ?? 'Revise os campos destacados e envie novamente.'}
           </p>
         ) : (
           <p className="text-xs leading-relaxed text-zinc-500">
