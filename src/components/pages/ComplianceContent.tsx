@@ -215,7 +215,7 @@ export default function ComplianceContent() {
               <ContactCard
                 href={`mailto:${EMAIL_OUVIDORIA}`}
                 icon={Mail}
-                label="E-mail da Ouvidoria"
+                label="E-mail de Denúncias"
                 value={EMAIL_OUVIDORIA}
                 hint="Retorno em até 10 dias úteis pelo Comitê de Ética e Integridade."
                 delay={0.1}
