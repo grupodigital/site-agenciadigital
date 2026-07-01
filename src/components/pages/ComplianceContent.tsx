@@ -29,7 +29,7 @@ const IN_VIEW = { margin: '-15% 0px -15% 0px' };
 // Quando vazio, o card é exibido em estado "A definir" e o link fica desabilitado.
 const WHATSAPP_E164 = '';
 const WHATSAPP_DISPLAY = 'A definir';
-const EMAIL_OUVIDORIA = 'ouvidoria@agenciadigital.com.vc';
+const EMAIL_OUVIDORIA = 'denuncias@grupodigital.com.vc';
 // Caminhos sugeridos pelo briefing. TI deve subir os PDFs nesses caminhos.
 const PDF_PROGRAMA = '/storage/compliance/programa-de-integridade-2026.pdf';
 const PDF_CODIGO = '/storage/compliance/codigo-de-etica-2026.pdf';
