@@ -12,7 +12,6 @@ import {
   BookOpen,
   Download,
   Mail,
-  MessageCircle,
   ShieldCheck,
 } from 'lucide-react';
 import AnimatedText from '@/components/ui/AnimatedText';
@@ -22,17 +21,11 @@ const EASE_OUT = [0.16, 1, 0.3, 1] as const;
 const EASE_STD = [0.4, 0, 0.2, 1] as const;
 const IN_VIEW = { margin: '-15% 0px -15% 0px' };
 
-// Configuração da página. WhatsApp e PDFs dependem de definições do time
-// (TI / Comitê de Ética) e foram deixados como placeholders documentados.
-
-// WhatsApp da Ouvidoria — preencher com o número em E.164, ex.: '5592999999999'.
-// Quando vazio, o card é exibido em estado "A definir" e o link fica desabilitado.
-const WHATSAPP_E164 = '';
-const WHATSAPP_DISPLAY = 'A definir';
+// Configuração da página.
 const EMAIL_OUVIDORIA = 'denuncias@grupodigital.com.vc';
-// Caminhos sugeridos pelo briefing. TI deve subir os PDFs nesses caminhos.
-const PDF_PROGRAMA = '/storage/compliance/programa-de-integridade-2026.pdf';
-const PDF_CODIGO = '/storage/compliance/codigo-de-etica-2026.pdf';
+// PDFs servidos a partir de public/storage.
+const PDF_PROGRAMA = '/storage/programa-integridade-compliance.pdf';
+const PDF_CODIGO = '/storage/codigo-etica.pdf';
 
 const TIPOS_RELATO = [
   { value: 'agressao-fisica', label: 'Agressão física' },
@@ -148,7 +141,7 @@ export default function ComplianceContent() {
           id="canal"
           className="relative z-10 bg-white px-4 py-16 sm:px-6 sm:py-20 md:py-32"
         >
-          <div className="mx-auto max-w-7xl">
+          <div className="mx-auto grid max-w-7xl grid-cols-1 gap-14 md:gap-20 lg:grid-cols-2 lg:items-center lg:gap-16">
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -197,21 +190,7 @@ export default function ComplianceContent() {
             </motion.div>
 
             {/* Contact cards */}
-            <div className="mt-14 grid grid-cols-1 gap-px bg-zinc-200 md:mt-20 md:grid-cols-2">
-              <ContactCard
-                href={
-                  WHATSAPP_E164
-                    ? `https://wa.me/${WHATSAPP_E164}?text=${encodeURIComponent(
-                        'Olá, gostaria de falar com a Ouvidoria da Digital.',
-                      )}`
-                    : null
-                }
-                icon={MessageCircle}
-                label="WhatsApp da Ouvidoria"
-                value={WHATSAPP_DISPLAY}
-                hint="Atendimento em horário comercial. Mensagens fora desse horário são respondidas no próximo dia útil."
-                delay={0}
-              />
+            <div className="border border-zinc-200">
               <ContactCard
                 href={`mailto:${EMAIL_OUVIDORIA}`}
                 icon={Mail}
@@ -221,7 +200,6 @@ export default function ComplianceContent() {
                 delay={0.1}
               />
             </div>
-
           </div>
         </section>
 
@@ -301,6 +279,7 @@ export default function ComplianceContent() {
 
                   <a
                     href={doc.href}
+                    download
                     target="_blank"
                     rel="noopener noreferrer"
                     className="mt-10 inline-flex items-center gap-3 text-sm font-semibold uppercase tracking-[0.18em] text-primary transition-colors group-hover:text-secondary"
@@ -352,36 +331,14 @@ function ContactCard({
   hint,
   delay,
 }: {
-  href: string | null;
+  href: string;
   icon: LucideIcon;
   label: string;
   value: string;
   hint: string;
   delay: number;
 }) {
-  const disabled = href === null;
-  const external = href !== null && href.startsWith('http');
-
-  const inner = (
-    <>
-      <Icon
-        aria-hidden="true"
-        className={`h-8 w-8 ${disabled ? 'text-zinc-400' : 'text-secondary'}`}
-        strokeWidth={1.5}
-      />
-      <p className="mt-6 text-xs font-medium uppercase tracking-[0.22em] text-zinc-500">
-        {label}
-      </p>
-      <p
-        className={`mt-3 text-xl font-medium tracking-tight md:text-2xl ${
-          disabled ? 'text-zinc-500' : 'text-zinc-900'
-        }`}
-      >
-        {value}
-      </p>
-      <p className="mt-3 text-sm leading-relaxed text-zinc-500">{hint}</p>
-    </>
-  );
+  const external = href.startsWith('http');
 
   return (
     <motion.div
@@ -391,20 +348,25 @@ function ContactCard({
       transition={{ duration: 0.7, ease: EASE_OUT, delay }}
       className="bg-white"
     >
-      {disabled || !href ? (
-        <div className="px-6 py-10 md:px-10 md:py-12" aria-disabled="true">
-          {inner}
-        </div>
-      ) : (
-        <a
-          href={href}
-          target={external ? '_blank' : undefined}
-          rel={external ? 'noopener noreferrer' : undefined}
-          className="block px-6 py-10 transition-colors hover:bg-zinc-50 md:px-10 md:py-12"
-        >
-          {inner}
-        </a>
-      )}
+      <a
+        href={href}
+        target={external ? '_blank' : undefined}
+        rel={external ? 'noopener noreferrer' : undefined}
+        className="block px-6 py-10 transition-colors hover:bg-zinc-50 md:px-10 md:py-12"
+      >
+        <Icon
+          aria-hidden="true"
+          className="h-8 w-8 text-secondary"
+          strokeWidth={1.5}
+        />
+        <p className="mt-6 text-xs font-medium uppercase tracking-[0.22em] text-zinc-500">
+          {label}
+        </p>
+        <p className="mt-3 text-xl font-medium tracking-tight text-zinc-900 md:text-2xl">
+          {value}
+        </p>
+        <p className="mt-3 text-sm leading-relaxed text-zinc-500">{hint}</p>
+      </a>
     </motion.div>
   );
 }
