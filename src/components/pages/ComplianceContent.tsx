@@ -22,7 +22,8 @@ const EASE_STD = [0.4, 0, 0.2, 1] as const;
 const IN_VIEW = { margin: '-15% 0px -15% 0px' };
 
 // Configuração da página.
-const EMAIL_OUVIDORIA = 'denuncias@grupodigital.com.vc';
+const EMAIL_DENUNCIAS = 'denuncias@grupodigital.com.vc';
+const EMAIL_OUVIDORIA = 'ouvidoria@agenciadigital.com.vc';
 // PDFs servidos a partir de public/storage.
 const PDF_PROGRAMA = '/storage/programa-integridade-compliance.pdf';
 const PDF_CODIGO = '/storage/codigo-etica.pdf';
@@ -190,14 +191,22 @@ export default function ComplianceContent() {
             </motion.div>
 
             {/* Contact cards */}
-            <div className="border border-zinc-200">
+            <div className="divide-y divide-zinc-200 border border-zinc-200">
+              <ContactCard
+                href={`mailto:${EMAIL_DENUNCIAS}`}
+                icon={Mail}
+                label="E-mail de Denúncias"
+                value={EMAIL_DENUNCIAS}
+                hint="Retorno em até 10 dias úteis pelo Comitê de Ética e Integridade."
+                delay={0.1}
+              />
               <ContactCard
                 href={`mailto:${EMAIL_OUVIDORIA}`}
                 icon={Mail}
-                label="E-mail de Denúncias"
+                label="E-mail da Ouvidoria"
                 value={EMAIL_OUVIDORIA}
-                hint="Retorno em até 10 dias úteis pelo Comitê de Ética e Integridade."
-                delay={0.1}
+                hint="Canal para sugestões, reclamações e elogios."
+                delay={0.2}
               />
             </div>
           </div>
