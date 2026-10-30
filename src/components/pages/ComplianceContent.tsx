@@ -15,6 +15,7 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import AnimatedText from '@/components/ui/AnimatedText';
+import { SITE } from '@/lib/site';
 import { enviarDenuncia, type DenunciaState } from '@/app/compliance/actions';
 
 const EASE_OUT = [0.16, 1, 0.3, 1] as const;
@@ -22,8 +23,8 @@ const EASE_STD = [0.4, 0, 0.2, 1] as const;
 const IN_VIEW = { margin: '-15% 0px -15% 0px' };
 
 // Configuração da página.
-const EMAIL_DENUNCIAS = 'denuncias@grupodigital.com.vc';
-const EMAIL_OUVIDORIA = 'ouvidoria@agenciadigital.com.vc';
+const EMAIL_DENUNCIAS = SITE.emailDenuncias;
+const EMAIL_OUVIDORIA = SITE.emailOuvidoria;
 // PDFs servidos a partir de public/storage.
 const PDF_PROGRAMA = '/storage/programa-integridade-compliance.pdf';
 const PDF_CODIGO = '/storage/codigo-etica.pdf';

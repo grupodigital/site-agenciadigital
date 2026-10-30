@@ -8,6 +8,10 @@ export const SITE = {
   tagline:
     "Comunicação institucional para o setor público na região Norte.",
   email: "contato@agenciadigital.com.vc",
+  // Compliance: exibidos em /compliance. O formulário do Canal de Denúncia
+  // também envia as manifestações para emailDenuncias.
+  emailDenuncias: "denuncias@agenciadigital.com.vc",
+  emailOuvidoria: "ouvidoria@agenciadigital.com.vc",
   // ISO year — used for Organization.foundingDate in JSON-LD. Update if the
   // real founding year is different.
   foundingDate: "2003",

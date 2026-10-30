@@ -3,7 +3,8 @@ import nodemailer, { type Transporter } from 'nodemailer';
 // Transporte SMTP compartilhado para envio de e-mails transacionais do site
 // (hoje: canal de denúncia do Compliance). Credenciais ficam em variáveis de
 // ambiente — ver .env.local (MAIL_HOST, MAIL_PORT, MAIL_USER, MAIL_PASS,
-// MAIL_FROM, MAIL_TO). Importado apenas pela Server Action ('use server'),
+// MAIL_FROM; opcionais: MAIL_TO como destinatário padrão quando `to` não é
+// informado, MAIL_CC e MAIL_BCC). Importado apenas pela Server Action ('use server'),
 // portanto os segredos nunca chegam ao bundle do cliente.
 
 function requiredEnv(name: string): string {
@@ -57,6 +58,9 @@ export async function sendMail({
 }: SendMailInput): Promise<void> {
   const from = requiredEnv('MAIL_FROM');
   const recipient = to ?? requiredEnv('MAIL_TO');
+  // Cópia (Cc) opcional. Diferente do BCC, aparece no header "Cc:" e fica
+  // visível para todos os destinatários.
+  const cc = process.env.MAIL_CC || undefined;
   // BCC (cópia oculta) opcional. O nodemailer envia este endereço apenas no
   // envelope SMTP (RCPT TO) e NÃO gera header "Bcc:", então o destinatário
   // não aparece em nenhum lugar da mensagem recebida.
@@ -65,6 +69,7 @@ export async function sendMail({
   const info = await getTransporter().sendMail({
     from,
     to: recipient,
+    cc,
     bcc,
     subject,
     text,
@@ -76,6 +81,7 @@ export async function sendMail({
   // o servidor SMTP aceitou/rejeitou no envelope. Útil para confirmar se o BCC
   // foi de fato incluído e aceito. `bccDefinido` revela se a env foi carregada.
   console.info('[mailer] envelope SMTP', {
+    ccDefinido: Boolean(cc),
     bccDefinido: Boolean(bcc),
     accepted: info.accepted,
     rejected: info.rejected,

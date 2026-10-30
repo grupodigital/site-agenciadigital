@@ -2,10 +2,12 @@
 
 // Server Action do canal de denúncia. Recebe o FormData do formulário em
 // ComplianceContent, valida do lado servidor e encaminha a manifestação por
-// e-mail (SMTP via src/lib/mailer) ao Comitê de Ética. Retorna o estado para o
+// e-mail (SMTP via src/lib/mailer) ao Comitê de Ética, no endereço
+// SITE.emailDenuncias (o mesmo exibido na página). Retorna o estado para o
 // useActionState do cliente exibir mensagens de erro/sucesso.
 
 import { sendMail } from '@/lib/mailer';
+import { SITE } from '@/lib/site';
 
 // Rótulos legíveis para compor o e-mail. As chaves espelham os values das
 // options em ComplianceContent.tsx.
@@ -124,6 +126,7 @@ export async function enviarDenuncia(
 
   try {
     await sendMail({
+      to: SITE.emailDenuncias,
       subject: `[Compliance] Nova denúncia — ${tipoLabel}`,
       text: linhas.join('\n'),
       html,
@@ -136,7 +139,7 @@ export async function enviarDenuncia(
     return {
       status: 'error',
       message:
-        'Não foi possível enviar sua manifestação agora. Tente novamente em alguns minutos ou utilize o e-mail da Ouvidoria.',
+        `Não foi possível enviar sua manifestação agora. Tente novamente em alguns minutos ou escreva para ${SITE.emailDenuncias}.`,
     };
   }
 
