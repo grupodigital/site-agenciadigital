@@ -26,8 +26,8 @@ const IN_VIEW = { margin: '-15% 0px -15% 0px' };
 const EMAIL_DENUNCIAS = SITE.emailDenuncias;
 const EMAIL_OUVIDORIA = SITE.emailOuvidoria;
 // PDFs servidos a partir de public/storage.
-const PDF_PROGRAMA = '/storage/programa-integridade-compliance.pdf';
-const PDF_CODIGO = '/storage/codigo-etica.pdf';
+const PDF_PROGRAMA = '/storage/programa_de_Integridade_2026.pdf';
+const PDF_CODIGO = '/storage/codigo_de_Etica_e_Conduta_2026.pdf';
 
 const TIPOS_RELATO = [
   { value: 'agressao-fisica', label: 'Agressão física' },
