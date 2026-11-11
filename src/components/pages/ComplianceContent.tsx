@@ -64,6 +64,7 @@ const DOCUMENTOS: ReadonlyArray<{
   subtitulo: string;
   descricao: string;
   href: string;
+  disabled?: boolean;
 }> = [
   {
     icon: ShieldCheck,
@@ -72,6 +73,7 @@ const DOCUMENTOS: ReadonlyArray<{
     descricao:
       'Documento completo com nossas políticas, controles e procedimentos de integridade.',
     href: PDF_PROGRAMA,
+    disabled: true,
   },
   {
     icon: BookOpen,
@@ -287,16 +289,26 @@ export default function ComplianceContent() {
                     {doc.descricao}
                   </p>
 
-                  <a
-                    href={doc.href}
-                    download
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-10 inline-flex items-center gap-3 text-sm font-semibold uppercase tracking-[0.18em] text-primary transition-colors group-hover:text-secondary"
-                  >
-                    <Download size={16} aria-hidden="true" strokeWidth={2} />
-                    Baixar PDF
-                  </a>
+                  {doc.disabled ? (
+                    <span
+                      aria-disabled="true"
+                      className="mt-10 inline-flex cursor-not-allowed items-center gap-3 text-sm font-semibold uppercase tracking-[0.18em] text-zinc-400 transition-colors group-hover:text-white/30"
+                    >
+                      <Download size={16} aria-hidden="true" strokeWidth={2} />
+                      Baixar PDF
+                    </span>
+                  ) : (
+                    <a
+                      href={doc.href}
+                      download
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-10 inline-flex items-center gap-3 text-sm font-semibold uppercase tracking-[0.18em] text-primary transition-colors group-hover:text-secondary"
+                    >
+                      <Download size={16} aria-hidden="true" strokeWidth={2} />
+                      Baixar PDF
+                    </a>
+                  )}
                 </motion.article>
               ))}
             </div>
