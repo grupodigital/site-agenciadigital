@@ -12,7 +12,6 @@ import {
   BookOpen,
   Download,
   Mail,
-  ShieldCheck,
 } from 'lucide-react';
 import AnimatedText from '@/components/ui/AnimatedText';
 import { SITE } from '@/lib/site';
@@ -26,7 +25,6 @@ const IN_VIEW = { margin: '-15% 0px -15% 0px' };
 const EMAIL_DENUNCIAS = SITE.emailDenuncias;
 const EMAIL_OUVIDORIA = SITE.emailOuvidoria;
 // PDFs servidos a partir de public/storage.
-const PDF_PROGRAMA = '/storage/programa_de_Integridade_2026.pdf';
 const PDF_CODIGO = '/storage/codigo_de_Etica_e_Conduta_2026.pdf';
 
 const TIPOS_RELATO = [
@@ -64,17 +62,7 @@ const DOCUMENTOS: ReadonlyArray<{
   subtitulo: string;
   descricao: string;
   href: string;
-  disabled?: boolean;
 }> = [
-  {
-    icon: ShieldCheck,
-    titulo: 'Programa de Integridade',
-    subtitulo: 'Versão atualizada',
-    descricao:
-      'Documento completo com nossas políticas, controles e procedimentos de integridade.',
-    href: PDF_PROGRAMA,
-    disabled: true,
-  },
   {
     icon: BookOpen,
     titulo: 'Código de Ética e Conduta',
@@ -254,7 +242,7 @@ export default function ComplianceContent() {
               />
             </motion.div>
 
-            <div className="mt-14 grid grid-cols-1 gap-6 md:mt-20 md:grid-cols-2 md:gap-8">
+            <div className="mt-14 grid grid-cols-1 gap-6 md:mt-20 md:gap-8">
               {DOCUMENTOS.map((doc, i) => (
                 <motion.article
                   key={doc.titulo}
@@ -289,26 +277,16 @@ export default function ComplianceContent() {
                     {doc.descricao}
                   </p>
 
-                  {doc.disabled ? (
-                    <span
-                      aria-disabled="true"
-                      className="mt-10 inline-flex cursor-not-allowed items-center gap-3 text-sm font-semibold uppercase tracking-[0.18em] text-zinc-400 transition-colors group-hover:text-white/30"
-                    >
-                      <Download size={16} aria-hidden="true" strokeWidth={2} />
-                      Baixar PDF
-                    </span>
-                  ) : (
-                    <a
-                      href={doc.href}
-                      download
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-10 inline-flex items-center gap-3 text-sm font-semibold uppercase tracking-[0.18em] text-primary transition-colors group-hover:text-secondary"
-                    >
-                      <Download size={16} aria-hidden="true" strokeWidth={2} />
-                      Baixar PDF
-                    </a>
-                  )}
+                  <a
+                    href={doc.href}
+                    download
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-10 inline-flex items-center gap-3 text-sm font-semibold uppercase tracking-[0.18em] text-primary transition-colors group-hover:text-secondary"
+                  >
+                    <Download size={16} aria-hidden="true" strokeWidth={2} />
+                    Baixar PDF
+                  </a>
                 </motion.article>
               ))}
             </div>
