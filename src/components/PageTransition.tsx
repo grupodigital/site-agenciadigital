@@ -15,6 +15,7 @@ const PAGE_COMPONENTS: Record<string, ComponentType> = {
   '/': dynamic(() => import('./pages/HomeContent'), { ssr: false }),
   '/agencia': dynamic(() => import('./pages/AgenciaContent'), { ssr: false }),
   '/trabalhos': dynamic(() => import('./pages/TrabalhosContent'), { ssr: false }),
+  '/blog': dynamic(() => import('./pages/BlogContent'), { ssr: false }),
   '/compliance': dynamic(() => import('./pages/ComplianceContent'), { ssr: false }),
 };
 
@@ -68,14 +69,14 @@ export default function PageTransition({
 
     document.addEventListener('click', onClick, true);
     return () => document.removeEventListener('click', onClick, true);
-  }, [pathname]);
+  }, [pathname, setTarget]);
 
   // When the actual URL catches up to the target, drop the overlay.
   useEffect(() => {
     if (target && pathname === target) {
       setTarget(null);
     }
-  }, [pathname, target]);
+  }, [pathname, target, setTarget]);
 
   const TargetPage = target ? PAGE_COMPONENTS[target] : null;
 

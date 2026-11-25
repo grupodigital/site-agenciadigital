@@ -83,5 +83,6 @@ export const NAV_PAGES = [
   { href: "/", label: "Início", priority: 1.0, changeFrequency: "weekly" as const },
   { href: "/agencia", label: "Agência", priority: 0.8, changeFrequency: "monthly" as const },
   { href: "/trabalhos", label: "Trabalhos", priority: 0.9, changeFrequency: "monthly" as const },
+  { href: "/blog", label: "Blog", priority: 0.7, changeFrequency: "weekly" as const },
   { href: "/compliance", label: "Compliance", priority: 0.3, changeFrequency: "yearly" as const },
 ];

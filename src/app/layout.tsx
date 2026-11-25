@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import localFont from "next/font/local";
+import { Google_Sans } from "next/font/google";
 import BottomMenu from "@/components/BottomMenu";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
@@ -9,11 +9,18 @@ import { TransitionProvider } from "@/components/TransitionContext";
 import { OFFICES, SITE, SOCIAL_LINKS } from "@/lib/site";
 import "./globals.css";
 
-const googleSans = localFont({
-  src: "../../public/font/GoogleSans.ttf",
+// Google Fonts build of Google Sans, self-hosted by next/font at build time:
+// a Latin-only variable woff2 (wght 400–700, every weight the site uses)
+// instead of the previous 4.8 MB full TTF that every page preloaded.
+const googleSans = Google_Sans({
+  subsets: ["latin"],
+  weight: "variable",
   variable: "--font-google-sans",
   display: "swap",
-  weight: "100 900",
+  // next/font has no metric overrides for Google Sans, so it can't build a
+  // size-adjusted fallback; say so explicitly and pick a close system stack.
+  adjustFontFallback: false,
+  fallback: ["ui-sans-serif", "system-ui", "Segoe UI", "Roboto", "Arial", "sans-serif"],
 });
 
 export const metadata: Metadata = {
@@ -112,6 +119,15 @@ const websiteLd = {
   url: SITE.url,
   inLanguage: "pt-BR",
   publisher: { "@id": `${SITE.url}/#organization` },
+  // Lets search engines and AI assistants query the blog directly.
+  potentialAction: {
+    "@type": "SearchAction",
+    target: {
+      "@type": "EntryPoint",
+      urlTemplate: `${SITE.url}/blog/busca?q={search_term_string}`,
+    },
+    "query-input": "required name=search_term_string",
+  },
 };
 
 export default function RootLayout({
