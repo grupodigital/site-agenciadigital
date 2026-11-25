@@ -3,7 +3,7 @@
 import { motion } from 'motion/react';
 import { usePathname } from 'next/navigation';
 import { preconnect, prefetchDNS } from 'react-dom';
-import { useTransition } from './TransitionContext';
+import { TRANSITION_TIMING, useTransition } from './TransitionContext';
 
 // Single persistent iframe instance mounted at the body root from first
 // load and NEVER unmounted. The Vimeo player keeps running across every
@@ -74,8 +74,7 @@ export default function HeroVideo() {
       transition={
         phase === 'rising'
           ? {
-              y: { duration: 0.5, ease: [0.32, 0.72, 0, 1] },
-              scale: { duration: 0.55, delay: 0.45, ease: [0.16, 1, 0.3, 1] },
+              ...TRANSITION_TIMING,
               opacity: { duration: 0.2 },
             }
           : { duration: 0.3 }

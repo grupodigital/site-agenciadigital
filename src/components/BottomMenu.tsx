@@ -64,8 +64,11 @@ export default function BottomMenu() {
   const [open, setOpen] = useState(false);
   const [atBottom, setAtBottom] = useState(false);
 
+  // During a page transition, reflect the destination right away instead of
+  // the page being covered.
+  const activePath = target ?? pathname;
   const current =
-    NAV_LINKS.find((link) => isActiveLink(link.href, pathname)) ?? NAV_LINKS[0];
+    NAV_LINKS.find((link) => isActiveLink(link.href, activePath)) ?? NAV_LINKS[0];
 
   // Close as soon as the user requests a new route — PageTransition sets
   // `target` on link click, before the URL actually changes. Also covers the
@@ -170,7 +173,7 @@ export default function BottomMenu() {
 
               <ul className="space-y-1">
                 {NAV_LINKS.map(({ href, label }) => {
-                  const isActive = isActiveLink(href, pathname);
+                  const isActive = isActiveLink(href, activePath);
                   return (
                     <li key={href}>
                       <Link

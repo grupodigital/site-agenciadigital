@@ -1,23 +1,92 @@
 'use client';
 
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, MotionGlobalConfig, motion } from 'motion/react';
 import dynamic from 'next/dynamic';
 import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, type ComponentType } from 'react';
-import { OverlayProvider, useTransition } from './TransitionContext';
+import { createElement, useEffect, type ComponentType } from 'react';
+import {
+  OverlayProvider,
+  TRANSITION_TIMING,
+  useTransition,
+} from './TransitionContext';
 
-// Overlay versions of the route pages are lazy-loaded. The route itself
-// already ships its own copy via the app router; here we only need the
-// component when the user actually triggers a transition. Webpack dedupes
-// the chunks with the route bundles where possible, so prefetched routes
-// load instantly when their overlay is needed.
-const PAGE_COMPONENTS: Record<string, ComponentType> = {
-  '/': dynamic(() => import('./pages/HomeContent'), { ssr: false }),
-  '/agencia': dynamic(() => import('./pages/AgenciaContent'), { ssr: false }),
-  '/trabalhos': dynamic(() => import('./pages/TrabalhosContent'), { ssr: false }),
-  '/blog': dynamic(() => import('./pages/BlogContent'), { ssr: false }),
-  '/compliance': dynamic(() => import('./pages/ComplianceContent'), { ssr: false }),
+// Loaders for the overlay versions of the route pages. Kept as plain
+// functions (not only wrapped in next/dynamic) so the chunks can be fetched
+// ahead of time: on idle after the first load and on link intent. Without
+// that, the chunk only started downloading on click and the panel rose empty
+// for ~300 ms.
+const PAGE_LOADERS: Record<string, () => Promise<{ default: ComponentType }>> = {
+  '/': () => import('./pages/HomeContent'),
+  '/agencia': () => import('./pages/AgenciaContent'),
+  '/trabalhos': () => import('./pages/TrabalhosContent'),
+  '/blog': () => import('./pages/BlogContent'),
+  '/compliance': () => import('./pages/ComplianceContent'),
 };
+
+// Pages whose chunk has already loaded, rendered directly. Going through
+// next/dynamic (React.lazy) would suspend once even for a loaded module, and
+// React 19 holds a revealed Suspense boundary back for ~300 ms — the panel
+// rose empty for that long.
+const loadedPages = new Map<string, ComponentType>();
+
+function loadPage(path: string) {
+  return PAGE_LOADERS[path]().then((mod) => {
+    loadedPages.set(path, mod.default);
+    return mod;
+  });
+}
+
+// Fallback for a click that beats the preload (very first interaction).
+const PAGE_COMPONENTS: Record<string, ComponentType> = Object.fromEntries(
+  Object.keys(PAGE_LOADERS).map((path) => [
+    path,
+    dynamic(() => loadPage(path), { ssr: false }),
+  ]),
+);
+
+/**
+ * Overlay content for `path`: the already-loaded page component when the
+ * preload finished (rendered synchronously), else the lazy fallback. Both
+ * references are module-level and stable per path.
+ */
+function OverlayPage({ path }: { path: string }) {
+  return createElement(loadedPages.get(path) ?? PAGE_COMPONENTS[path]);
+}
+
+/** Safety net: never leave animations globally disabled. */
+const SKIP_ANIMATIONS_MAX_MS = 3000;
+let skipAnimationsTimer: ReturnType<typeof setTimeout> | undefined;
+
+function setSkipAnimations(skip: boolean) {
+  clearTimeout(skipAnimationsTimer);
+  MotionGlobalConfig.skipAnimations = skip;
+  if (skip) {
+    skipAnimationsTimer = setTimeout(
+      () => setSkipAnimations(false),
+      SKIP_ANIMATIONS_MAX_MS,
+    );
+  }
+}
+
+/** The internal, transition-enabled pathname a link points to, if any. */
+function transitionPath(link: HTMLAnchorElement | null) {
+  if (!link) return null;
+  if (link.target && link.target !== '_self') return null;
+  if (link.hasAttribute('download')) return null;
+  const href = link.getAttribute('href');
+  if (!href || href.startsWith('#')) return null;
+  try {
+    const url = new URL(link.href);
+    if (url.origin !== window.location.origin) return null;
+    return url.pathname in PAGE_LOADERS ? url.pathname : null;
+  } catch {
+    return null;
+  }
+}
+
+function closestLink(target: EventTarget | null) {
+  return (target as Element | null)?.closest?.('a') ?? null;
+}
 
 export default function PageTransition({
   children,
@@ -31,7 +100,44 @@ export default function PageTransition({
   // the target route's content animates over the current page.
   // Stored in shared context so other components (e.g. HeroVideo) can react
   // to the upcoming route during the transition.
-  const { target, setTarget } = useTransition();
+  const { target, setTarget, setArrivedVia } = useTransition();
+
+  // Warm up every overlay page once the browser is idle after first load —
+  // the chunks are small and it makes the first transition as smooth as the
+  // rest.
+  useEffect(() => {
+    const preloadAll = () => {
+      for (const path of Object.keys(PAGE_LOADERS)) void loadPage(path);
+    };
+    if ('requestIdleCallback' in window) {
+      const handle = window.requestIdleCallback(preloadAll, { timeout: 4000 });
+      return () => window.cancelIdleCallback(handle);
+    }
+    const timer = setTimeout(preloadAll, 2000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // On intent (hover, focus, touch), fetch the page chunk and the route's
+  // data, so both are ready by the time the overlay finishes rising.
+  useEffect(() => {
+    const warmed = new Set<string>();
+    const onIntent = (e: Event) => {
+      const path = transitionPath(closestLink(e.target));
+      if (!path || path === pathname || warmed.has(path)) return;
+      warmed.add(path);
+      void loadPage(path);
+      router.prefetch(path);
+    };
+    const events = ['pointerover', 'focusin', 'touchstart'] as const;
+    for (const type of events) {
+      document.addEventListener(type, onIntent, { capture: true, passive: true });
+    }
+    return () => {
+      for (const type of events) {
+        document.removeEventListener(type, onIntent, { capture: true });
+      }
+    };
+  }, [pathname, router]);
 
   // Intercept clicks on internal links so we can run the cover animation
   // before the URL actually changes.
@@ -45,57 +151,66 @@ export default function PageTransition({
     const onClick = (e: MouseEvent) => {
       if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey)
         return;
-      const link = (e.target as Element | null)?.closest?.('a');
-      if (!link) return;
-      if (link.target && link.target !== '_self') return;
-      if (link.hasAttribute('download')) return;
-      const href = link.getAttribute('href');
-      if (!href || href.startsWith('#')) return;
-      let url: URL;
-      try {
-        url = new URL(link.href);
-      } catch {
-        return;
-      }
-      if (url.origin !== window.location.origin) return;
-      if (url.pathname === pathname) return;
-      // Only intercept routes we know how to render in the overlay.
-      if (!(url.pathname in PAGE_COMPONENTS)) return;
+      const path = transitionPath(closestLink(e.target));
+      if (!path || path === pathname) return;
+      // Respect "reduce motion": let <Link> navigate normally, no overlay.
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
       e.preventDefault();
       e.stopImmediatePropagation();
-      setTarget(url.pathname);
+      if (!loadedPages.has(path)) void loadPage(path);
+      router.prefetch(path);
+      setTarget(path);
     };
 
     document.addEventListener('click', onClick, true);
     return () => document.removeEventListener('click', onClick, true);
-  }, [pathname, setTarget]);
+  }, [pathname, router, setTarget]);
 
-  // When the actual URL catches up to the target, drop the overlay.
+  // When the actual URL catches up to the target, let the new route paint
+  // underneath (two frames, so its mount effects have run), re-enable
+  // animations and drop the overlay — which fades out over an identical
+  // page.
   useEffect(() => {
-    if (target && pathname === target) {
-      setTarget(null);
-    }
+    if (!target || pathname !== target) return;
+    let frame2 = 0;
+    const frame1 = requestAnimationFrame(() => {
+      frame2 = requestAnimationFrame(() => {
+        setSkipAnimations(false);
+        setTarget(null);
+      });
+    });
+    return () => {
+      cancelAnimationFrame(frame1);
+      cancelAnimationFrame(frame2);
+    };
   }, [pathname, target, setTarget]);
 
-  const TargetPage = target ? PAGE_COMPONENTS[target] : null;
+  const swapToTarget = () => {
+    if (!target) return;
+    // The overlay already shows the destination fully drawn. Make the real
+    // route mount in its final state too (entrance animations complete
+    // instantly) so nothing blinks out and re-animates when the overlay goes.
+    setSkipAnimations(true);
+    setArrivedVia(target);
+    router.push(target);
+  };
 
   return (
     <>
       {children}
 
       <AnimatePresence>
-        {target && TargetPage && (
+        {target && target in PAGE_LOADERS && (
           <motion.div
             key={target}
             initial={{ y: '100%', scale: 0.55 }}
             animate={{ y: 0, scale: 1 }}
             exit={{ opacity: 0 }}
             transition={{
-              // Phase 1: block rises from below
-              y: { duration: 0.5, ease: [0.32, 0.72, 0, 1] },
-              // Phase 2: block expands from bottom-center to fill the viewport
-              scale: { duration: 0.55, delay: 0.45, ease: [0.16, 1, 0.3, 1] },
+              // Phase 1: block rises from below.
+              // Phase 2: block expands from bottom-center to fill the viewport.
+              ...TRANSITION_TIMING,
               // Fade-out on exit (after the URL change, when the real route
               // is already rendered underneath the overlay).
               opacity: { duration: 0.2 },
@@ -106,10 +221,9 @@ export default function PageTransition({
               if (
                 typeof definition === 'object' &&
                 definition !== null &&
-                'scale' in definition &&
-                target
+                'scale' in definition
               ) {
-                router.push(target);
+                swapToTarget();
               }
             }}
             style={{
@@ -126,7 +240,7 @@ export default function PageTransition({
             }}
           >
             <OverlayProvider>
-              <TargetPage />
+              <OverlayPage path={target} />
             </OverlayProvider>
           </motion.div>
         )}

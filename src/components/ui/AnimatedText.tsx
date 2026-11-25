@@ -2,7 +2,8 @@
 
 import { motion, useInView, useReducedMotion } from 'motion/react';
 import { Fragment, useRef, type ElementType, type ReactNode, type Ref } from 'react';
-import { useInOverlay } from '@/components/TransitionContext';
+import { usePathname } from 'next/navigation';
+import { useInOverlay, useTransition } from '@/components/TransitionContext';
 
 type Props = {
   children: string;
@@ -44,8 +45,14 @@ export default function AnimatedText({
   // the entry animation — the real {children} instance will play it once
   // the URL change settles, and we don't want the text to animate twice.
   const inOverlay = useInOverlay();
+  // Landing on this page through the overlay transition: the overlay already
+  // showed this title, so the real page renders it in place instead of
+  // blinking it out and animating it again.
+  const pathname = usePathname();
+  const { arrivedVia } = useTransition();
+  const alreadyShown = eager && arrivedVia === pathname;
 
-  if (inOverlay) {
+  if (inOverlay || alreadyShown) {
     return (
       <Tag ref={ref as Ref<HTMLElement>} className={className}>
         {children}

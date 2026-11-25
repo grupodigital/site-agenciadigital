@@ -15,21 +15,44 @@ import {
 type TransitionContextValue = {
   target: string | null;
   setTarget: (next: string | null) => void;
+  /**
+   * Pathname most recently reached through the overlay transition. The page
+   * the user lands on was already shown (fully drawn) in the overlay, so its
+   * above-the-fold entrance animations must not replay — that's what made
+   * the title blink out and re-animate after every transition.
+   */
+  arrivedVia: string | null;
+  setArrivedVia: (path: string | null) => void;
 };
 
 const TransitionContext = createContext<TransitionContextValue>({
   target: null,
   setTarget: () => {},
+  arrivedVia: null,
+  setArrivedVia: () => {},
 });
 
 export function TransitionProvider({ children }: { children: ReactNode }) {
   const [target, setTarget] = useState<string | null>(null);
+  const [arrivedVia, setArrivedVia] = useState<string | null>(null);
   return (
-    <TransitionContext.Provider value={{ target, setTarget }}>
+    <TransitionContext.Provider
+      value={{ target, setTarget, arrivedVia, setArrivedVia }}
+    >
       {children}
     </TransitionContext.Provider>
   );
 }
+
+/**
+ * Timing of the overlay's rise (phase 1, `y`) and expansion (phase 2,
+ * `scale`). Shared by PageTransition and HeroVideo, which rises in sync
+ * when the destination is the home page.
+ */
+export const TRANSITION_TIMING = {
+  y: { duration: 0.42, ease: [0.32, 0.72, 0, 1] },
+  scale: { duration: 0.5, delay: 0.36, ease: [0.16, 1, 0.3, 1] },
+} as const;
 
 export function useTransition() {
   return useContext(TransitionContext);
