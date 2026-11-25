@@ -8,6 +8,7 @@
 
 import { sendMail } from '@/lib/mailer';
 import { SITE } from '@/lib/site';
+import { HONEYPOT_FIELD, LIMITES } from './denuncia-config';
 
 // Rótulos legíveis para compor o e-mail. As chaves espelham os values das
 // options em ComplianceContent.tsx.
@@ -36,9 +37,24 @@ const RELACIONAMENTOS: Record<string, string> = {
 const TIPOS_RELATO_VALIDOS = new Set(Object.keys(TIPOS_RELATO));
 const RELACIONAMENTOS_VALIDOS = new Set(Object.keys(RELACIONAMENTOS));
 
+export type DenunciaValues = {
+  tipoRelato: string;
+  relacionamento: string;
+  descricao: string;
+  nome: string;
+  email: string;
+  ciencia: boolean;
+};
+
 export type DenunciaState = {
   status: 'idle' | 'success' | 'error';
   message?: string;
+  /**
+   * Valores enviados, devolvidos em caso de erro. O React 19 reseta o
+   * formulário quando a action termina; o cliente usa estes valores como
+   * defaultValue para que a pessoa não perca o que escreveu.
+   */
+  values?: DenunciaValues;
   errors?: Partial<
     Record<
       'tipoRelato' | 'relacionamento' | 'descricao' | 'ciencia' | 'nome' | 'email',
@@ -59,6 +75,26 @@ export async function enviarDenuncia(
   const nome = String(formData.get('nome') ?? '').trim();
   const email = String(formData.get('email') ?? '').trim();
 
+  const values: DenunciaValues = {
+    tipoRelato,
+    relacionamento,
+    descricao,
+    nome,
+    email,
+    ciencia: Boolean(ciencia),
+  };
+
+  const successState: DenunciaState = {
+    status: 'success',
+    message:
+      'Sua manifestação foi recebida e será analisada pelo Comitê de Ética em até 10 dias úteis.',
+  };
+
+  // Bot preencheu o campo isca: finge sucesso e descarta, sem dar pista.
+  if (String(formData.get(HONEYPOT_FIELD) ?? '').trim()) {
+    return successState;
+  }
+
   const errors: NonNullable<DenunciaState['errors']> = {};
 
   if (!TIPOS_RELATO_VALIDOS.has(tipoRelato)) {
@@ -69,19 +105,22 @@ export async function enviarDenuncia(
   }
   if (descricao.length < 20) {
     errors.descricao = 'Descreva o ocorrido com pelo menos 20 caracteres.';
+  } else if (descricao.length > LIMITES.descricao) {
+    errors.descricao = `A descrição pode ter no máximo ${LIMITES.descricao.toLocaleString('pt-BR')} caracteres.`;
   }
   if (!ciencia) {
     errors.ciencia = 'É necessário concordar com os termos.';
   }
   if (identificar) {
     if (!nome) errors.nome = 'Informe seu nome.';
-    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+    else if (nome.length > LIMITES.nome) errors.nome = 'Nome muito longo.';
+    if (email.length > LIMITES.email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
       errors.email = 'Informe um e-mail válido.';
     }
   }
 
   if (Object.keys(errors).length > 0) {
-    return { status: 'error', errors };
+    return { status: 'error', errors, values };
   }
 
   const identificado = Boolean(identificar);
@@ -140,12 +179,9 @@ export async function enviarDenuncia(
       status: 'error',
       message:
         `Não foi possível enviar sua manifestação agora. Tente novamente em alguns minutos ou escreva para ${SITE.emailDenuncias}.`,
+      values,
     };
   }
 
-  return {
-    status: 'success',
-    message:
-      'Sua manifestação foi recebida e será analisada pelo Comitê de Ética em até 10 dias úteis.',
-  };
+  return successState;
 }

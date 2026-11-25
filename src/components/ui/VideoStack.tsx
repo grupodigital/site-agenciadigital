@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useState } from 'react';
 import { motion } from 'motion/react';
 import YouTubeModal from './YouTubeModal';
@@ -20,6 +21,12 @@ type Props = {
 const GRID_COLS: Record<NonNullable<Props['columns']>, string> = {
   2: 'sm:grid-cols-2',
   3: 'sm:grid-cols-2 lg:grid-cols-3',
+};
+
+// Rendered card width per layout, for the thumbnail srcset.
+const THUMB_SIZES: Record<NonNullable<Props['columns']>, string> = {
+  2: '(min-width: 1280px) 620px, (min-width: 640px) 50vw, 100vw',
+  3: '(min-width: 1280px) 410px, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw',
 };
 
 // Reusable video grid: rectangular cards laid out side by side so every
@@ -46,12 +53,14 @@ export default function VideoStack({ items, columns = 3 }: Props) {
             transition={{ duration: 0.6, ease: EASE_OUT, delay: (i % columns) * 0.08 }}
             className="group relative block aspect-video w-full overflow-hidden bg-zinc-900"
           >
-            <div
-              aria-hidden="true"
-              className="absolute inset-0 bg-cover bg-center transition duration-700 group-hover:scale-105"
-              style={{
-                backgroundImage: `url(https://img.youtube.com/vi/${video.videoId}/maxresdefault.jpg)`,
-              }}
+            {/* next/image instead of a CSS background: lazy-loaded and served
+                as a resized WebP instead of the 1280px YouTube JPEG. */}
+            <Image
+              src={`https://i.ytimg.com/vi/${video.videoId}/maxresdefault.jpg`}
+              alt=""
+              fill
+              sizes={THUMB_SIZES[columns]}
+              className="object-cover transition duration-700 group-hover:scale-105"
             />
             <div
               aria-hidden="true"
@@ -73,9 +82,10 @@ export default function VideoStack({ items, columns = 3 }: Props) {
             </span>
 
             <div className="absolute inset-x-0 bottom-0 p-4 text-left sm:p-5">
-              <h3 className="text-base font-medium leading-tight text-white sm:text-lg">
+              {/* <span>, not a heading: a <button> may only hold phrasing content. */}
+              <span className="block text-base font-medium leading-tight text-white sm:text-lg">
                 {video.titulo}
-              </h3>
+              </span>
             </div>
           </motion.button>
         ))}

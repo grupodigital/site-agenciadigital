@@ -24,11 +24,15 @@ export default function HeroVideo() {
   const pathname = usePathname();
   const { target } = useTransition();
 
-  // Warm DNS/TLS to Vimeo CDNs as early as possible.
+  // DNS lookup is cheap, so warm it everywhere (the user may head home).
+  // Full TCP/TLS preconnects only where the video is (or is about to be)
+  // shown — elsewhere they'd compete with the page's own critical requests.
   prefetchDNS('https://player.vimeo.com');
-  preconnect('https://player.vimeo.com');
-  preconnect('https://i.vimeocdn.com');
-  preconnect('https://f.vimeocdn.com', { crossOrigin: 'anonymous' });
+  if (pathname === '/' || target === '/') {
+    preconnect('https://player.vimeo.com');
+    preconnect('https://i.vimeocdn.com');
+    preconnect('https://f.vimeocdn.com', { crossOrigin: 'anonymous' });
+  }
 
   let phase: 'rising' | 'home' | 'leaving' | 'hidden';
   if (target === '/') {

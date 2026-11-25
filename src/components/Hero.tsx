@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'motion/react';
+import { SITE } from '@/lib/site';
 
 // In-flow spacer reserving the visual hero area (aspect-video × full width)
 // inside HomeContent. The actual iframe lives in <HeroVideo /> mounted
@@ -15,6 +16,11 @@ export default function Hero() {
       data-hero
       className="relative aspect-[3/4] w-full bg-primary sm:aspect-video"
     >
+      {/* The home hero is a video, so the page's single <h1> is visually
+          hidden but present for search engines and screen readers. */}
+      <h1 className="sr-only">
+        {SITE.name}: {SITE.tagline}
+      </h1>
       {/* Scroll hint anchored to the bottom of the visual hero. Lives in the
           in-flow spacer so it scrolls away naturally with the page. */}
       <motion.div

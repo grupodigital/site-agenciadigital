@@ -277,13 +277,13 @@ export default function HomeContent() {
 const CLIENTES = [
   {
     nome: "Governo do Amazonas",
-    logo: "/clientes/logo-gov-horizontal-contraste.svg",
+    logo: "/clientes/logo-gov-horizontal-contraste.png",
   },
   { nome: "Prefeitura de Manaus", logo: "/clientes/logo-pmm-nova.png" },
   { nome: "Governo do Tocantins", logo: "/clientes/logo-governotocantins.svg" },
   {
     nome: "Prefeitura de Palmas",
-    logo: "/clientes/logo-prefeiturapalmas.svg",
+    logo: "/clientes/logo-prefeiturapalmas.png",
   },
   {
     nome: "Assembleia Legislativa do Tocantins",
@@ -299,7 +299,7 @@ const CLIENTES = [
 
 const SELOS = [
   { nome: "ABAP", logo: "/selos/logo-abap.svg" },
-  { nome: "ABRADi", logo: "/selos/logo-abradi.svg" },
+  { nome: "ABRADi", logo: "/selos/logo-abradi.png" },
   { nome: "CENP", logo: "/selos/logo-cenp.svg" },
   { nome: "Fenapro", logo: "/selos/logo-fenapro.svg" },
 ] as const;

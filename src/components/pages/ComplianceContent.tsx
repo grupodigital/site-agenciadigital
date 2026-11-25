@@ -16,6 +16,7 @@ import {
 import AnimatedText from '@/components/ui/AnimatedText';
 import { SITE } from '@/lib/site';
 import { enviarDenuncia, type DenunciaState } from '@/app/compliance/actions';
+import { HONEYPOT_FIELD, LIMITES } from '@/app/compliance/denuncia-config';
 
 const EASE_OUT = [0.16, 1, 0.3, 1] as const;
 const EASE_STD = [0.4, 0, 0.2, 1] as const;
@@ -377,6 +378,9 @@ function DenunciaForm() {
     INITIAL_STATE,
   );
   const [identify, setIdentify] = useState(false);
+  // What the person typed, echoed back by the action on error (React 19
+  // resets the form after every action; these become the new defaults).
+  const v = state.values;
 
   if (state.status === 'success') {
     return (
@@ -453,6 +457,8 @@ function DenunciaForm() {
               name="nome"
               autoComplete="name"
               required
+              maxLength={LIMITES.nome}
+              defaultValue={v?.nome}
               error={e.nome}
             />
             <Field
@@ -461,6 +467,8 @@ function DenunciaForm() {
               type="email"
               autoComplete="email"
               required
+              maxLength={LIMITES.email}
+              defaultValue={v?.email}
               error={e.email}
             />
           </div>
@@ -471,6 +479,7 @@ function DenunciaForm() {
             label="Tipo de relato"
             name="tipoRelato"
             options={TIPOS_RELATO}
+            defaultValue={v?.tipoRelato}
             error={e.tipoRelato}
             required
           />
@@ -478,6 +487,7 @@ function DenunciaForm() {
             label="Relacionamento com a empresa"
             name="relacionamento"
             options={RELACIONAMENTOS}
+            defaultValue={v?.relacionamento}
             error={e.relacionamento}
             required
           />
@@ -487,9 +497,20 @@ function DenunciaForm() {
           label="Descrição"
           name="descricao"
           hint="Inclua datas, locais e envolvidos, se conhecidos. Mínimo de 20 caracteres."
+          maxLength={LIMITES.descricao}
+          defaultValue={v?.descricao}
           error={e.descricao}
           required
         />
+
+        {/* Honeypot: fora da tela e fora da ordem de tabulação. Pessoas não o
+            veem; bots que preenchem todos os campos são descartados. */}
+        <div aria-hidden="true" className="absolute -left-[10000px] h-px w-px overflow-hidden">
+          <label>
+            Não preencha este campo
+            <input type="text" name={HONEYPOT_FIELD} tabIndex={-1} autoComplete="off" />
+          </label>
+        </div>
       </div>
 
       {/* Proteção de dados */}
@@ -510,6 +531,7 @@ function DenunciaForm() {
           <input
             type="checkbox"
             name="ciencia"
+            defaultChecked={v?.ciencia}
             className="mt-1 h-4 w-4 accent-secondary"
           />
           <span>
@@ -600,6 +622,8 @@ function Field({
   autoComplete,
   error,
   hint,
+  maxLength,
+  defaultValue,
 }: {
   label: string;
   name: string;
@@ -608,6 +632,8 @@ function Field({
   autoComplete?: string;
   error?: string;
   hint?: string;
+  maxLength?: number;
+  defaultValue?: string;
 }) {
   const id = useId();
   return (
@@ -621,6 +647,8 @@ function Field({
         type={type}
         required={required}
         autoComplete={autoComplete}
+        maxLength={maxLength}
+        defaultValue={defaultValue}
         aria-invalid={error ? true : undefined}
         className={`${INPUT_BASE} ${error ? 'border-red-500' : 'border-zinc-300'}`}
       />
@@ -640,12 +668,14 @@ function SelectField({
   options,
   error,
   required,
+  defaultValue = '',
 }: {
   label: string;
   name: string;
   options: readonly { value: string; label: string }[];
   error?: string;
   required?: boolean;
+  defaultValue?: string;
 }) {
   const id = useId();
   return (
@@ -653,11 +683,15 @@ function SelectField({
       <FieldLabel htmlFor={id} required={required}>
         {label}
       </FieldLabel>
+      {/* React applies a select's defaultValue only on mount, and React 19
+          resets the form after each action — remount when the echoed value
+          changes so the reset lands on what the person had chosen. */}
       <select
+        key={defaultValue}
         id={id}
         name={name}
         required={required}
-        defaultValue=""
+        defaultValue={defaultValue}
         aria-invalid={error ? true : undefined}
         className={`${INPUT_BASE} pr-10 ${error ? 'border-red-500' : 'border-zinc-300'}`}
       >
@@ -685,12 +719,16 @@ function TextareaField({
   hint,
   error,
   required,
+  maxLength,
+  defaultValue,
 }: {
   label: string;
   name: string;
   hint?: string;
   error?: string;
   required?: boolean;
+  maxLength?: number;
+  defaultValue?: string;
 }) {
   const id = useId();
   return (
@@ -703,6 +741,8 @@ function TextareaField({
         name={name}
         required={required}
         rows={6}
+        maxLength={maxLength}
+        defaultValue={defaultValue}
         aria-invalid={error ? true : undefined}
         className={`${INPUT_BASE} leading-relaxed ${error ? 'border-red-500' : 'border-zinc-300'}`}
       />
