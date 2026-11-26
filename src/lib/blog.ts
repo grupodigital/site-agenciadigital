@@ -8,6 +8,11 @@ export const BLOG_ORIGIN = "https://blog.agenciadigital.com.vc";
 export const BLOG_API = `${BLOG_ORIGIN}/wp-json/wp/v2`;
 export const BLOG_REVALIDATE = 600;
 export const POSTS_PER_PAGE = 12;
+/**
+ * Posts on the first page of /blog: the featured post + 9 in the grid
+ * (three full rows of three). Later pages show POSTS_PER_PAGE.
+ */
+export const BLOG_FIRST_PAGE_SIZE = 10;
 const WORDS_PER_MINUTE = 200;
 
 export type BlogImage = {
@@ -491,10 +496,10 @@ async function toSummaries(posts: WpPost[]): Promise<BlogPostSummary[]> {
 type GetPostsOptions = {
   page?: number;
   /**
-   * Extra posts shown above the grid on page 1 (the featured post). Later
-   * pages are offset accordingly so nothing is skipped or repeated.
+   * How many posts page 1 shows (default POSTS_PER_PAGE). Later pages show
+   * POSTS_PER_PAGE and are offset so nothing is skipped or repeated.
    */
-  lead?: number;
+  firstPageSize?: number;
   categoryId?: number;
   search?: string;
 };
@@ -502,11 +507,10 @@ type GetPostsOptions = {
 /** One page of posts, newest first. Returns null past the last page. */
 export async function getPosts({
   page = 1,
-  lead = 0,
+  firstPageSize = POSTS_PER_PAGE,
   categoryId,
   search,
 }: GetPostsOptions = {}) {
-  const firstPageSize = POSTS_PER_PAGE + lead;
   const perPage = page === 1 ? firstPageSize : POSTS_PER_PAGE;
   const offset = page === 1 ? 0 : firstPageSize + (page - 2) * POSTS_PER_PAGE;
 

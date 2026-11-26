@@ -1,7 +1,13 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import BlogPostContent from "@/components/pages/BlogPostContent";
-import { coverOf, getPostBySlug, getPosts, getRelatedPosts } from "@/lib/blog";
+import {
+  BLOG_FIRST_PAGE_SIZE,
+  coverOf,
+  getPostBySlug,
+  getPosts,
+  getRelatedPosts,
+} from "@/lib/blog";
 import {
   BLOG_FEED_TYPES,
   BLOG_ID,
@@ -20,7 +26,7 @@ type Params = { slug: string };
 // Prerender the most recent posts at build time; older ones are rendered on
 // first visit and then cached (ISR).
 export async function generateStaticParams(): Promise<Params[]> {
-  const first = await getPosts({ lead: 1 });
+  const first = await getPosts({ firstPageSize: BLOG_FIRST_PAGE_SIZE });
   return (first?.posts ?? []).map((post) => ({ slug: post.slug }));
 }
 

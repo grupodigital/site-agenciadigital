@@ -1,5 +1,5 @@
 import BlogContent from "@/components/pages/BlogContent";
-import { getCategories, getPosts } from "@/lib/blog";
+import { BLOG_FIRST_PAGE_SIZE, getCategories, getPosts } from "@/lib/blog";
 import {
   BLOG_DESCRIPTION,
   BLOG_ID,
@@ -25,7 +25,7 @@ export const metadata = listingMetadata({
 
 export default async function BlogPage() {
   const [result, categories] = await Promise.all([
-    getPosts({ lead: 1 }),
+    getPosts({ firstPageSize: BLOG_FIRST_PAGE_SIZE }),
     getCategories(),
   ]);
   const all = result?.posts ?? [];
