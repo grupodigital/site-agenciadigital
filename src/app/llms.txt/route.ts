@@ -36,7 +36,9 @@ export async function GET() {
 
   const articles = posts
     .map((p) => {
-      const meta = [p.category, p.publishedAt.slice(0, 10)].filter(Boolean).join(", ");
+      const meta = [p.category, p.author && `por ${p.author}`, p.publishedAt.slice(0, 10)]
+        .filter(Boolean)
+        .join(", ");
       return `- [${p.title}](${SITE.url}/blog/${p.slug}) (${meta}): ${oneLine(p.excerpt)}`;
     })
     .join("\n");

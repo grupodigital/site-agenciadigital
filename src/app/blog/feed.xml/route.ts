@@ -30,6 +30,8 @@ export async function GET() {
       <guid isPermaLink="true">${url}</guid>
       <pubDate>${new Date(post.publishedAt).toUTCString()}</pubDate>
       <description>${xml(post.excerpt)}</description>${
+        post.author ? `\n      <dc:creator>${xml(post.author)}</dc:creator>` : ""
+      }${
         post.category ? `\n      <category>${xml(post.category)}</category>` : ""
       }
     </item>`;
@@ -37,7 +39,7 @@ export async function GET() {
     .join("\n");
 
   const body = `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
   <channel>
     <title>${xml(`Blog — ${SITE.name}`)}</title>
     <link>${blogUrl}</link>

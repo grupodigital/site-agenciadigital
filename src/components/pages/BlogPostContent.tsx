@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'motion/react';
 import { ArrowRight } from 'lucide-react';
+import AuthorMonogram from '@/components/blog/AuthorMonogram';
 import BlogCta from '@/components/blog/BlogCta';
 import PostCard from '@/components/blog/PostCard';
 import { PostTocAside, PostTocDetails } from '@/components/blog/PostToc';
@@ -31,8 +32,6 @@ type Props = {
 export default function BlogPostContent({ post, related, url }: Props) {
   const hasToc = post.toc.length >= 2;
   const cover = coverOf(post);
-  // Only show "Atualizado em" for edits on a later day than publication.
-  const isUpdated = post.modified.slice(0, 10) > post.date.slice(0, 10);
 
   return (
     <main className="flex-1">
@@ -133,18 +132,18 @@ export default function BlogPostContent({ post, related, url }: Props) {
               transition={{ duration: 0.7, ease: EASE_OUT, delay: 0.55 }}
               className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-white/80 sm:mt-8 sm:text-sm"
             >
-              <span className="font-medium text-white">Digital Comunicação</span>
+              {post.author ? (
+                <span className="inline-flex items-center gap-2.5">
+                  <AuthorMonogram name={post.author.name} />
+                  <span>
+                    Por <span className="font-medium text-white">{post.author.name}</span>
+                  </span>
+                </span>
+              ) : (
+                <span className="font-medium text-white">Digital Comunicação</span>
+              )}
               <span aria-hidden="true">·</span>
               <time dateTime={post.publishedAt}>{formatPostDate(post.date)}</time>
-              {isUpdated && (
-                <>
-                  <span aria-hidden="true">·</span>
-                  <span>
-                    Atualizado em{' '}
-                    <time dateTime={post.modifiedAt}>{formatPostDate(post.modified)}</time>
-                  </span>
-                </>
-              )}
               <span aria-hidden="true">·</span>
               <span>{post.readingMinutes} min de leitura</span>
             </motion.div>
@@ -214,32 +213,52 @@ export default function BlogPostContent({ post, related, url }: Props) {
 
                 <ShareButtons url={url} title={post.title} variant="inline" />
 
-                <div className="mt-10 flex flex-col gap-5 bg-surface p-6 sm:mt-12 sm:flex-row sm:gap-6 sm:p-8">
-                  <Image
-                    src="/logo-ad-azul.svg"
-                    alt="Digital Comunicação"
-                    width={120}
-                    height={34}
-                    className="h-auto w-[108px] flex-none sm:mt-1 sm:w-[120px]"
-                  />
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-zinc-600">
-                      Escrito por
-                    </p>
-                    <p className="mt-1.5 text-xl font-medium text-zinc-900">
-                      Digital Comunicação
-                    </p>
-                    <p className="mt-2 text-base leading-[1.65] text-zinc-600">
-                      Agência de comunicação institucional com 22 anos de mercado e
-                      escritórios em Manaus, Palmas e Boa Vista.
-                    </p>
-                    <Link
-                      href="/agencia"
-                      className="mt-2 inline-flex min-h-11 items-center gap-2 text-[15px] font-semibold text-primary"
-                    >
-                      Conheça a agência
-                      <ArrowRight size={16} strokeWidth={2} aria-hidden="true" />
-                    </Link>
+                <div className="mt-10 bg-surface p-6 sm:mt-12 sm:p-8">
+                  {post.author && (
+                    <div className="mb-6 flex items-start gap-4 border-b border-zinc-200 pb-6 sm:gap-5">
+                      <AuthorMonogram name={post.author.name} size="lg" />
+                      <div className="min-w-0">
+                        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-zinc-600">
+                          Escrito por
+                        </p>
+                        <p className="mt-1.5 text-xl font-medium text-zinc-900">
+                          {post.author.name}
+                        </p>
+                        {post.author.bio && (
+                          <p className="mt-2 text-base leading-[1.65] text-zinc-600">
+                            {post.author.bio}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-6">
+                    <Image
+                      src="/logo-ad-azul.svg"
+                      alt="Digital Comunicação"
+                      width={120}
+                      height={34}
+                      className="h-auto w-[96px] flex-none sm:mt-1 sm:w-[108px]"
+                    />
+                    <div>
+                      {!post.author && (
+                        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-zinc-600">
+                          Escrito por Digital Comunicação
+                        </p>
+                      )}
+                      <p className="text-base leading-[1.65] text-zinc-600">
+                        Agência de comunicação institucional com 22 anos de mercado e
+                        escritórios em Manaus, Palmas e Boa Vista.
+                      </p>
+                      <Link
+                        href="/agencia"
+                        className="mt-1 inline-flex min-h-11 items-center gap-2 text-[15px] font-semibold text-primary"
+                      >
+                        Conheça a agência
+                        <ArrowRight size={16} strokeWidth={2} aria-hidden="true" />
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </footer>

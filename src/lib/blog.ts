@@ -40,6 +40,15 @@ export type BlogCategory = {
   count: number;
 };
 
+export type BlogAuthor = {
+  /** Display name from WordPress (via Yoast — /wp/v2/users is not public). */
+  name: string;
+  /** Biographical info from the WordPress profile, when filled in. */
+  bio: string | null;
+  /** The editorial team account ("Redação Digital"), not a person. */
+  isTeam: boolean;
+};
+
 export type BlogPostSummary = {
   id: number;
   slug: string;
@@ -52,6 +61,7 @@ export type BlogPostSummary = {
   readingMinutes: number;
   category: BlogCategory | null;
   image: BlogImage | null;
+  author: BlogAuthor | null;
 };
 
 export type TocItem = { id: string; text: string };
@@ -90,7 +100,11 @@ type WpPost = {
   featured_media: number;
   categories: number[];
   tags?: number[];
-  yoast_head_json?: { description?: string };
+  yoast_head_json?: {
+    description?: string;
+    author?: string;
+    schema?: { "@graph"?: { "@type"?: string | string[]; name?: string; description?: string }[] };
+  };
 };
 
 type WpMedia = {
@@ -102,7 +116,26 @@ type WpMedia = {
 
 // `content` is only used to compute reading time; it is dropped after mapping.
 const SUMMARY_FIELDS =
-  "id,slug,date,date_gmt,title,excerpt,content,featured_media,categories";
+  "id,slug,date,date_gmt,title,excerpt,content,featured_media,categories,yoast_head_json.author";
+
+/** WordPress account the agency uses for team-written posts. */
+const TEAM_AUTHOR = /^reda[cç][aã]o\b/i;
+
+function toAuthor(name: string | undefined, bio: string | null = null): BlogAuthor | null {
+  const clean = name ? decodeEntities(name).trim() : "";
+  if (!clean) return null;
+  return { name: clean, bio, isTeam: TEAM_AUTHOR.test(clean) };
+}
+
+/** The author's bio from the Person node of the post's Yoast schema. */
+function authorBio(post: WpPost) {
+  const name = post.yoast_head_json?.author;
+  const person = post.yoast_head_json?.schema?.["@graph"]?.find(
+    (node) => [node["@type"]].flat().includes("Person") && node.name === name,
+  );
+  const bio = person?.description ? htmlToText(person.description) : "";
+  return bio || null;
+}
 
 async function wpFetch<T>(
   path: string,
@@ -451,6 +484,7 @@ async function toSummaries(posts: WpPost[]): Promise<BlogPostSummary[]> {
     category:
       post.categories.map((id) => categoryById.get(id)).find(Boolean) ?? null,
     image: media.get(post.featured_media) ?? null,
+    author: toAuthor(post.yoast_head_json?.author),
   }));
 }
 
@@ -502,7 +536,7 @@ export async function getPosts({
 export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
   const res = await wpFetch<WpPost[]>("posts", {
     slug,
-    _fields: `${SUMMARY_FIELDS},modified,modified_gmt,tags,yoast_head_json.description`,
+    _fields: `${SUMMARY_FIELDS},modified,modified_gmt,tags,yoast_head_json.description,yoast_head_json.schema`,
   });
   const post = res?.data[0];
   if (!post) return null;
@@ -528,6 +562,7 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
 
   return {
     ...summary,
+    author: toAuthor(post.yoast_head_json?.author, authorBio(post)),
     modified: post.modified ?? post.date,
     modifiedAt: gmtToIso(post.modified_gmt, summary.publishedAt),
     wordCount: countWords(raw),
@@ -569,6 +604,7 @@ export type BlogIndexEntry = {
   title: string;
   excerpt: string;
   category: string | null;
+  author: string | null;
   publishedAt: string;
   modifiedAt: string;
 };
@@ -578,13 +614,16 @@ export type BlogIndexEntry = {
  * RSS feed, llms.txt and internal-link rewriting.
  */
 export async function getPostIndex(): Promise<BlogIndexEntry[]> {
-  type Row = Pick<WpPost, "slug" | "date" | "date_gmt" | "modified_gmt" | "title" | "excerpt" | "categories">;
+  type Row = Pick<
+    WpPost,
+    "slug" | "date" | "date_gmt" | "modified_gmt" | "title" | "excerpt" | "categories" | "yoast_head_json"
+  >;
   const rows: Row[] = [];
   for (let page = 1; ; page++) {
     const res = await wpFetch<Row[]>("posts", {
       page,
       per_page: 100,
-      _fields: "slug,date,date_gmt,modified_gmt,title,excerpt,categories",
+      _fields: "slug,date,date_gmt,modified_gmt,title,excerpt,categories,yoast_head_json.author",
     });
     if (!res) break;
     rows.push(...res.data);
@@ -600,6 +639,7 @@ export async function getPostIndex(): Promise<BlogIndexEntry[]> {
       excerpt: htmlToText(row.excerpt.rendered),
       category:
         row.categories.map((id) => categoryById.get(id)).find(Boolean) ?? null,
+      author: toAuthor(row.yoast_head_json?.author)?.name ?? null,
       publishedAt,
       modifiedAt: gmtToIso(row.modified_gmt, publishedAt),
     };

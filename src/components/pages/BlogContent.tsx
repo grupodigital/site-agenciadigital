@@ -1,10 +1,10 @@
 'use client';
 
+import Link from 'next/link';
 import { motion } from 'motion/react';
 import AnimatedText from '@/components/ui/AnimatedText';
 import BlogCta from '@/components/blog/BlogCta';
 import BlogSearch from '@/components/blog/BlogSearch';
-import CategoryNav from '@/components/blog/CategoryNav';
 import FeaturedPost from '@/components/blog/FeaturedPost';
 import Pagination from '@/components/blog/Pagination';
 import PostCard from '@/components/blog/PostCard';
@@ -67,7 +67,6 @@ export default function BlogContent({
   total,
 }: Props) {
   const text = heading(scope, total);
-  const activeCategory = scope.kind === 'category' ? scope.slug : null;
 
   return (
     <main className="flex-1">
@@ -141,11 +140,6 @@ export default function BlogContent({
         </div>
       </section>
 
-      {/* ============================== CATEGORIAS ============================== */}
-      {categories && categories.length > 0 && (
-        <CategoryNav categories={categories} active={activeCategory} />
-      )}
-
       {/* ============================== POSTS ============================== */}
       <div className="relative z-10 bg-white px-4 pt-8 pb-20 sm:px-6 sm:pt-16 sm:pb-28 md:pt-20 md:pb-32">
         <div className="mx-auto max-w-7xl">
@@ -210,7 +204,11 @@ function EmptyState({ scope }: { scope: ListingScope }) {
       </p>
       {scope.kind === 'search' && (
         <p className="mt-3 text-base text-zinc-600 sm:text-lg">
-          Tente outra palavra ou navegue pelas categorias acima.
+          Tente outra palavra ou{' '}
+          <Link href="/blog" className="font-medium text-primary underline decoration-secondary decoration-2 underline-offset-4">
+            veja todos os artigos
+          </Link>
+          .
         </p>
       )}
     </div>

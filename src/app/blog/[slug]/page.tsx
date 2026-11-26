@@ -47,6 +47,7 @@ export async function generateMetadata({
     title: post.title,
     description: post.description,
     keywords: post.tags.length ? post.tags : undefined,
+    authors: [{ name: post.author?.name ?? SITE.name }],
     alternates: { canonical: url, types: BLOG_FEED_TYPES },
     openGraph: {
       type: "article",
@@ -55,7 +56,7 @@ export async function generateMetadata({
       url,
       publishedTime: post.publishedAt,
       modifiedTime: post.modifiedAt,
-      authors: [SITE.url],
+      authors: [post.author?.name ?? SITE.name],
       section: post.category?.name,
       tags: post.tags,
       images,
@@ -106,12 +107,22 @@ export default async function BlogPostPage({
           about: { "@type": "Thing", name: post.category.name },
         }),
         ...(post.tags.length > 0 && { keywords: post.tags.join(", ") }),
-        author: {
-          "@type": "Organization",
-          "@id": ORGANIZATION_ID,
-          name: SITE.name,
-          url: SITE.url,
-        },
+        // Individual authors are a Person working for the agency; the
+        // team account ("Redação Digital") is the agency itself.
+        author:
+          post.author && !post.author.isTeam
+            ? {
+                "@type": "Person",
+                name: post.author.name,
+                ...(post.author.bio && { description: post.author.bio }),
+                worksFor: { "@id": ORGANIZATION_ID },
+              }
+            : {
+                "@type": "Organization",
+                "@id": ORGANIZATION_ID,
+                name: SITE.name,
+                url: SITE.url,
+              },
         publisher: { "@id": ORGANIZATION_ID },
         isPartOf: { "@type": "Blog", "@id": BLOG_ID },
         // Sections as named, linkable parts — lets answer engines cite and
